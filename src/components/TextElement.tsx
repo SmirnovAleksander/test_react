@@ -6,17 +6,14 @@ interface TextElementProps {
     fontSize: number;
     fontFamily: string;
     color: string;
-    x: number;
-    y: number;
+    top: number;
+    left: number;
     width: number;
     height: number;
     selected: boolean;
     onSelect: (id: number) => void;
-    updatePosition: (id: number, x: number, y: number) => void;
+    updatePosition: (id: number, top: number, left: number) => void;
     updateSize: (id: number, width: number, height: number) => void;
-    updateFontSize: (id: number, fontSize: number) => void;
-    updateFontFamily: (id: number, fontFamily: string) => void;
-    updateColor: (id: number, color: number) => void;
 }
 
 const TextElement: React.FC<TextElementProps> = ({
@@ -25,17 +22,14 @@ const TextElement: React.FC<TextElementProps> = ({
                                                      fontSize,
                                                      fontFamily,
                                                      color,
-                                                     x,
-                                                     y,
+                                                     top,
+                                                     left,
                                                      width,
                                                      height,
                                                      selected,
                                                      onSelect,
                                                      updatePosition,
                                                      updateSize,
-                                                     // updateFontSize,
-                                                     // updateFontFamily,
-                                                     // updateColor,
                                                  }) => {
 
     const [isDragging, setIsDragging] = useState(false);
@@ -48,39 +42,29 @@ const TextElement: React.FC<TextElementProps> = ({
         e.preventDefault(); // Отключаем выделение
         onSelect(id);
         setIsDragging(true);
-        setDragStart({ x: e.clientX - x, y: e.clientY - y });
+        setDragStart({ x: e.clientX - left, y: e.clientY - top });
     };
 
     const handleMouseMove = (e: MouseEvent) => {
         if (isDragging) {
-            updatePosition(id, e.clientX - dragStart.x, e.clientY - dragStart.y);
+            updatePosition(id, e.clientY - dragStart.y, e.clientX - dragStart.x);
         }
         if (isResizing) {
-            const widthChange = e.clientX - dragStart.x;
-            const heightChange = e.clientY - dragStart.y;
-
             let newWidth = width;
             let newHeight = height;
-            let newX = x;
-            let newY = y;
 
-            // Обработка изменения размера
+            // Изменяем размеры в зависимости от направления
             if (resizeStart.direction.includes('right')) {
-                newWidth = Math.max(50, resizeStart.width + widthChange);
+                newWidth = Math.max(50, resizeStart.width + (e.clientX - dragStart.x));
             } else if (resizeStart.direction.includes('left')) {
-                newWidth = Math.max(50, resizeStart.width - widthChange);
-                newX = x + (resizeStart.width - newWidth); // Перемещение элемента
+                newWidth = Math.max(50, resizeStart.width - (e.clientX - dragStart.x));
             }
             if (resizeStart.direction.includes('bottom')) {
-                newHeight = Math.max(20, resizeStart.height + heightChange);
+                newHeight = Math.max(20, resizeStart.height + (e.clientY - dragStart.y));
             } else if (resizeStart.direction.includes('top')) {
-                newHeight = Math.max(20, resizeStart.height - heightChange);
-                newY = y + (resizeStart.height - newHeight); // Перемещение элемента
+                newHeight = Math.max(20, resizeStart.height - (e.clientY - dragStart.y));
             }
-
-            // Обновляем размеры и позицию
             updateSize(id, newWidth, newHeight);
-            updatePosition(id, newX, newY);
         }
     };
 
@@ -96,29 +80,6 @@ const TextElement: React.FC<TextElementProps> = ({
         setDragStart({ x: e.clientX, y: e.clientY });
         setResizeStart({ width, height, direction });
     };
-
-    // const handleFontSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     const newFontSize = parseInt(e.target.value, 10);
-    //     updateFontSize(id, newFontSize);
-    // };
-    //
-    // const handleFontFamilyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    //     const newFontFamily = e.target.value;
-    //     updateFontFamily(id, newFontFamily);
-    // };
-    // const handleFontSizeChange = (newFontSize: number) => {
-    //     updateFontSize(id, newFontSize);
-    // };
-    //
-    // // Update font family and notify parent component
-    // const handleFontFamilyChange = (newFontFamily: string) => {
-    //     updateFontFamily(id, newFontFamily);
-    // };
-    //
-    // // Update color and notify parent component
-    // const handleColorChange = (newColor: string) => {
-    //     updateColor(id, newColor);
-    // };
 
     useEffect(() => {
         if (isDragging || isResizing) {
@@ -136,14 +97,14 @@ const TextElement: React.FC<TextElementProps> = ({
         <div
             className={`text-element ${selected ? 'selected' : ''}`}
             style={{
+                top,
+                left,
+                width,
+                height,
                 position: 'absolute',
-                top: y,
-                left: x,
-                width: width,
-                height: height,
                 border: selected ? '1px solid blue' : 'none',
                 cursor: isDragging ? 'move' : 'default',
-                userSelect: 'none',
+                userSelect: 'none', // Отключает выделение текста
                 color: `${color}`,
                 fontSize: `${fontSize}px`,
                 fontFamily: `${fontFamily}`,
