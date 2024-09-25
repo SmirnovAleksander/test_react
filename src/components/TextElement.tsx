@@ -3,9 +3,9 @@ import React, { useState, useEffect } from 'react';
 interface TextElementProps {
     id: number;
     text: string;
-    fontSize: number;
-    fontFamily: string;
-    color: string;
+    fontSize?: number;
+    fontFamily?: string;
+    color?: string;
     top: number;
     left: number;
     width: number;
