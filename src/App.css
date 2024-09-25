@@ -1,0 +1,42 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.slide-editor {
+  position: relative;
+  width: 1500px;
+  height: 1500px;
+  border: 2px solid black;
+  margin: 0 auto;
+}
+
+.toolbar {
+  margin-bottom: 10px;
+}
+
+.text-element,
+.image-element {
+  position: absolute;
+}
+
+.resize-handle {
+  width: 10px;
+  height: 10px;
+  background-color: blue;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  cursor: nwse-resize;
+}
+
+.selected {
+  outline: 2px dashed blue;
+}
+.properties-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
