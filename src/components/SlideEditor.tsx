@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import './App.css';
-import TextElement from "./components/TextElement.tsx";
-import ImageElement from "./components/ImageElement.tsx";
+import '../App.css';
+import TextElement from "./TextElement.tsx";
+import ImageElement from "./ImageElement.tsx";
 
 
 interface ElementProps {
@@ -64,12 +64,34 @@ const SlideEditor: React.FC = () => {
     };
 
     const updateElementPosition = (id: number, top: number, left: number) => {
-        setElements(elements.map(el => el.id === id ? { ...el, top, left } : el));
+        const slideWidth = 1000;
+        const slideHeight = 1000;
+
+        setElements(elements.map(el => {
+            if (el.id === id) {
+                const newLeft = Math.max(0, Math.min(left, slideWidth - el.width));
+                const newTop = Math.max(0, Math.min(top, slideHeight - el.height));
+                return { ...el, top: newTop, left: newLeft };
+            }
+            return el;
+        }));
     };
 
+
     const updateElementSize = (id: number, width: number, height: number) => {
-        setElements(elements.map(el => el.id === id ? { ...el, width, height } : el));
+        const slideWidth = 1000;
+        const slideHeight = 1000;
+
+        setElements(elements.map(el => {
+            if (el.id === id) {
+                const newWidth = Math.min(Math.max(50, width), slideWidth - el.left); // минимальный размер 50px
+                const newHeight = Math.min(Math.max(20, height), slideHeight - el.top); // минимальный размер 20px
+                return { ...el, width: newWidth, height: newHeight };
+            }
+            return el;
+        }));
     };
+
 
     const updateElementFontSize = (id: number, fontSize: number) => {
         setElements(elements.map(el => el.id === id ? { ...el, fontSize } : el));

@@ -1,4 +1,4 @@
-import SlideEditor from "./SlideEditor.tsx";
+import SlideEditor from "./components/SlideEditor.tsx";
 
 const App = () => {
     return (
