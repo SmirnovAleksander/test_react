@@ -2,29 +2,42 @@ import React, { useState, useEffect } from 'react';
 
 interface TextElementProps {
     id: number;
-    content: string;
-    top: number;
-    left: number;
+    text: string;
+    fontSize: number;
+    fontFamily: string;
+    color: string;
+    x: number;
+    y: number;
     width: number;
     height: number;
     selected: boolean;
     onSelect: (id: number) => void;
-    updatePosition: (id: number, top: number, left: number) => void;
+    updatePosition: (id: number, x: number, y: number) => void;
     updateSize: (id: number, width: number, height: number) => void;
+    updateFontSize: (id: number, fontSize: number) => void;
+    updateFontFamily: (id: number, fontFamily: string) => void;
+    updateColor: (id: number, color: number) => void;
 }
 
 const TextElement: React.FC<TextElementProps> = ({
                                                      id,
-                                                     content,
-                                                     top,
-                                                     left,
+                                                     text,
+                                                     fontSize,
+                                                     fontFamily,
+                                                     color,
+                                                     x,
+                                                     y,
                                                      width,
                                                      height,
                                                      selected,
                                                      onSelect,
                                                      updatePosition,
                                                      updateSize,
+                                                     // updateFontSize,
+                                                     // updateFontFamily,
+                                                     // updateColor,
                                                  }) => {
+
     const [isDragging, setIsDragging] = useState(false);
     const [isResizing, setIsResizing] = useState(false);
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
@@ -35,12 +48,12 @@ const TextElement: React.FC<TextElementProps> = ({
         e.preventDefault(); // Отключаем выделение
         onSelect(id);
         setIsDragging(true);
-        setDragStart({ x: e.clientX - left, y: e.clientY - top });
+        setDragStart({ x: e.clientX - x, y: e.clientY - y });
     };
 
     const handleMouseMove = (e: MouseEvent) => {
         if (isDragging) {
-            updatePosition(id, e.clientY - dragStart.y, e.clientX - dragStart.x);
+            updatePosition(id, e.clientX - dragStart.x, e.clientY - dragStart.y);
         }
         if (isResizing) {
             const widthChange = e.clientX - dragStart.x;
@@ -48,26 +61,26 @@ const TextElement: React.FC<TextElementProps> = ({
 
             let newWidth = width;
             let newHeight = height;
-            let newTop = top;
-            let newLeft = left;
+            let newX = x;
+            let newY = y;
 
             // Обработка изменения размера
             if (resizeStart.direction.includes('right')) {
                 newWidth = Math.max(50, resizeStart.width + widthChange);
             } else if (resizeStart.direction.includes('left')) {
                 newWidth = Math.max(50, resizeStart.width - widthChange);
-                newLeft = left + (resizeStart.width - newWidth); // Перемещение элемента
+                newX = x + (resizeStart.width - newWidth); // Перемещение элемента
             }
             if (resizeStart.direction.includes('bottom')) {
                 newHeight = Math.max(20, resizeStart.height + heightChange);
             } else if (resizeStart.direction.includes('top')) {
                 newHeight = Math.max(20, resizeStart.height - heightChange);
-                newTop = top + (resizeStart.height - newHeight); // Перемещение элемента
+                newY = y + (resizeStart.height - newHeight); // Перемещение элемента
             }
 
             // Обновляем размеры и позицию
             updateSize(id, newWidth, newHeight);
-            updatePosition(id, newTop, newLeft);
+            updatePosition(id, newX, newY);
         }
     };
 
@@ -83,6 +96,29 @@ const TextElement: React.FC<TextElementProps> = ({
         setDragStart({ x: e.clientX, y: e.clientY });
         setResizeStart({ width, height, direction });
     };
+
+    // const handleFontSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     const newFontSize = parseInt(e.target.value, 10);
+    //     updateFontSize(id, newFontSize);
+    // };
+    //
+    // const handleFontFamilyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    //     const newFontFamily = e.target.value;
+    //     updateFontFamily(id, newFontFamily);
+    // };
+    // const handleFontSizeChange = (newFontSize: number) => {
+    //     updateFontSize(id, newFontSize);
+    // };
+    //
+    // // Update font family and notify parent component
+    // const handleFontFamilyChange = (newFontFamily: string) => {
+    //     updateFontFamily(id, newFontFamily);
+    // };
+    //
+    // // Update color and notify parent component
+    // const handleColorChange = (newColor: string) => {
+    //     updateColor(id, newColor);
+    // };
 
     useEffect(() => {
         if (isDragging || isResizing) {
@@ -100,18 +136,21 @@ const TextElement: React.FC<TextElementProps> = ({
         <div
             className={`text-element ${selected ? 'selected' : ''}`}
             style={{
-                top,
-                left,
-                width,
-                height,
                 position: 'absolute',
+                top: y,
+                left: x,
+                width: width,
+                height: height,
                 border: selected ? '1px solid blue' : 'none',
                 cursor: isDragging ? 'move' : 'default',
-                userSelect: 'none', // Отключает выделение текста
+                userSelect: 'none',
+                color: `${color}`,
+                fontSize: `${fontSize}px`,
+                fontFamily: `${fontFamily}`,
             }}
             onMouseDown={handleMouseDown}
         >
-            <div>{content}</div>
+            <div>{text}</div>
             {selected && (
                 <>
                     {/* Угловые маркеры */}
