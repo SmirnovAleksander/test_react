@@ -165,6 +165,13 @@ const SlideEditor: React.FC = () => {
         setElements(elements.map(el => el.id === id ? { ...el, rotation: newRotation } : el));
     };
 
+    const deleteElement = (id: number) => {
+        setElements(prevElements => prevElements.filter(element => element.id !== id));
+        if (selectedElementId === id) {
+            setSelectedElementId(null); // Сбрасываем выбранный элемент, если он был удален
+        }
+    };
+
 
     const renderPropertiesPanel = () => {
         const selectedElement = elements.find(el => el.id === selectedElementId);
@@ -500,6 +507,7 @@ const SlideEditor: React.FC = () => {
                     elements={elements}
                     selectedElementId={selectedElementId}
                     onSelectElement={selectElement}
+                    onDeleteElement={deleteElement}
                 />
             </div>
         </div>
