@@ -39,6 +39,7 @@ interface ShapeElementProps {
     height: number;
     color: string; // Цвет фигуры
     rotation: number;
+    lineWidth?: number;
 }
 
 // Объединенный интерфейс для элементов
@@ -99,6 +100,7 @@ const SlideEditor: React.FC = () => {
             height: 100,
             color: '#ff0000',
             rotation: 0,
+            lineWidth: 2,
         }]);
     };
 
@@ -163,6 +165,10 @@ const SlideEditor: React.FC = () => {
 
     const updateRotation = (id: number, newRotation: number) => {
         setElements(elements.map(el => el.id === id ? { ...el, rotation: newRotation } : el));
+    };
+
+    const updateLineWidth = (id: number, newLineWidth: number) => {
+        setElements(elements.map(el => el.id === id ? { ...el, lineWidth: newLineWidth } : el));
     };
 
     const deleteElement = (id: number) => {
@@ -346,13 +352,58 @@ const SlideEditor: React.FC = () => {
                             type="number"
                             value={selectedElement.rotation || 0}
                             onChange={(e) => {
-                                const newRotation = Number(e.target.value);
-                                setElements(elements.map(el => el.id === selectedElement.id ? {
-                                    ...el,
-                                    rotation: newRotation
-                                } : el));
+                                updateRotation(selectedElement.id, Number(e.target.value))
                             }}
                         />
+                    </div>
+                    <div style={{marginTop: '10px'}}>
+                        <button onClick={() => {
+                            updateRotation(selectedElement.id, 0)
+                        }}>0°
+                        </button>
+                        <button onClick={() => {
+                            updateRotation(selectedElement.id, 45)
+                        }}>45°
+                        </button>
+                        <button onClick={() => {
+                            updateRotation(selectedElement.id, 90)
+                        }}>90°
+                        </button>
+                        <button onClick={() => {
+                            updateRotation(selectedElement.id, 135)
+                        }}>135°
+                        </button>
+                    </div>
+                    <div style={{marginTop: '10px'}}>
+                        <button onClick={() => {
+                            updateRotation(selectedElement.id, 180)
+                        }}>180°
+                        </button>
+                        <button onClick={() => {
+                            updateRotation(selectedElement.id, 225)
+                        }}>225°
+                        </button>
+                        <button onClick={() => {
+                            updateRotation(selectedElement.id, 270)
+                        }}>270°
+                        </button>
+                        <button onClick={() => {
+                            updateRotation(selectedElement.id, 315)
+                        }}>315°
+                        </button>
+                    </div>
+                    <div>
+                        <label>Поворот:</label>
+                        <input
+                            type="range"
+                            min="0" // Минимальный угол поворота
+                            max="360" // Максимальный угол поворота
+                            value={selectedElement.rotation || 0}
+                            onChange={(e) => {
+                                updateRotation(selectedElement.id, Number(e.target.value))
+                            }}
+                        />
+                        <span>{selectedElement.rotation || 0}°</span>
                     </div>
                 </>
             );
@@ -406,14 +457,72 @@ const SlideEditor: React.FC = () => {
                             type="number"
                             value={selectedElement.rotation || 0}
                             onChange={(e) => {
-                                const newRotation = Number(e.target.value);
-                                setElements(elements.map(el => el.id === selectedElement.id ? {
-                                    ...el,
-                                    rotation: newRotation
-                                } : el));
+                                updateRotation(selectedElement.id, Number(e.target.value))
                             }}
                         />
                     </div>
+                    <div style={{marginTop: '10px'}}>
+                        <button onClick={() => {
+                            updateRotation(selectedElement.id, 0)
+                        }}>0°
+                        </button>
+                        <button onClick={() => {
+                            updateRotation(selectedElement.id, 45)
+                        }}>45°
+                        </button>
+                        <button onClick={() => {
+                            updateRotation(selectedElement.id, 90)
+                        }}>90°
+                        </button>
+                        <button onClick={() => {
+                            updateRotation(selectedElement.id, 135)
+                        }}>135°
+                        </button>
+                    </div>
+                    <div style={{marginTop: '10px'}}>
+                        <button onClick={() => {
+                            updateRotation(selectedElement.id, 180)
+                        }}>180°
+                        </button>
+                        <button onClick={() => {
+                            updateRotation(selectedElement.id, 225)
+                        }}>225°
+                        </button>
+                        <button onClick={() => {
+                            updateRotation(selectedElement.id, 270)
+                        }}>270°
+                        </button>
+                        <button onClick={() => {
+                            updateRotation(selectedElement.id, 315)
+                        }}>315°
+                        </button>
+                    </div>
+                    <div>
+                        <label>Поворот:</label>
+                        <input
+                            type="range"
+                            min="0" // Минимальный угол поворота
+                            max="360" // Максимальный угол поворота
+                            value={selectedElement.rotation || 0}
+                            onChange={(e) => {
+                                updateRotation(selectedElement.id, Number(e.target.value))
+                            }}
+                        />
+                        <span>{selectedElement.rotation || 0}°</span>
+                    </div>
+                    {selectedElement.type === 'line' ? <div>
+                        <label>Толщина линии:</label>
+                        <input
+                            type="range"
+                            min="1"
+                            max="10"
+                            value={selectedElement.lineWidth || 2}
+                            onChange={(e) => {
+                                updateLineWidth(selectedElement.id, Number(e.target.value))
+                            }}
+                        />
+                        <span>{selectedElement.lineWidth || 2}°</span>
+                    </div> : <div></div>}
                 </>
             );
         }
@@ -484,11 +593,12 @@ const SlideEditor: React.FC = () => {
                                     id={el.id}
                                     type={el.type}
                                     rotation={el.rotation}
+                                    lineWidth={el.lineWidth!}
                                     top={el.top}
                                     left={el.left}
                                     width={el.width}
                                     height={el.height}
-                                    color={el.color!} // Убедитесь, что цвет задан
+                                    color={el.color!}
                                     selected={el.id === selectedElementId}
                                     onSelect={selectElement}
                                     updatePosition={updateElementPosition}

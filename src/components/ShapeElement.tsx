@@ -6,6 +6,7 @@ interface ShapeElementProps {
     type: 'rectangle' | 'circle' | 'line';
     color: string;
     rotation: number;
+    lineWidth: number;
     top: number;
     left: number;
     width: number;
@@ -21,6 +22,7 @@ const ShapeElement: React.FC<ShapeElementProps> = ({
                                                        type,
                                                        color,
                                                        rotation,
+                                                       lineWidth,
                                                        top,
                                                        left,
                                                        width,
@@ -93,55 +95,65 @@ const ShapeElement: React.FC<ShapeElementProps> = ({
 
 
     return (
-        <div
-            onMouseDown={handleMouseDown}
-            style={{
-                position: 'absolute',
-                top,
-                left,
-                width,
-                height,
-                backgroundColor: selected ? 'rgba(0, 0, 255, 0.3)' : 'transparent',
-                border: selected ? `2px solid blue` : 'none',
-                cursor: isDragging ? 'move' : 'default',
-                userSelect: 'none',
-                pointerEvents: 'auto',
-                transform: `rotate(${rotation}deg)`,
-            }}
-        >
-            {type === 'rectangle' && (
-                <div
-                    style={{
-                        width: '100%',
-                        height: '100%',
-                        backgroundColor: color,
-                    }}
-                />
-            )}
-            {type === 'circle' && (
-                <div
-                    style={{
-                        width: '100%',
-                        height: '100%',
-                        backgroundColor: color,
-                        borderRadius: '50%',
-                    }}
-                />
-            )}
-            {type === 'line' && (
-                <div
-                    style={{
-                        position: 'absolute',
-                        top: height / 2,
-                        left: 0,
-                        width: width,
-                        height: '2px',
-                        backgroundColor: color,
-                    }}
-                />
-            )}
-            {selected && (<ResizeHandles onResizeStart={handleResizeMouseDown} />)}
-        </div>
+        <>
+            {/*<input*/}
+            {/*    type="range"*/}
+            {/*    min="1"*/}
+            {/*    max="10"*/}
+            {/*    value={lineWidth}*/}
+            {/*    onChange={(e) => setLineWidth(Number(e.target.value))} // Обновляем состояние при изменении*/}
+            {/*/>*/}
+            <div
+                onMouseDown={handleMouseDown}
+                style={{
+                    position: 'absolute',
+                    top,
+                    left,
+                    width,
+                    height,
+                    backgroundColor: selected ? 'rgba(0, 0, 255, 0.3)' : 'transparent',
+                    border: selected ? `2px solid blue` : 'none',
+                    cursor: isDragging ? 'move' : 'default',
+                    userSelect: 'none',
+                    pointerEvents: 'auto',
+                    transform: `rotate(${rotation}deg)`,
+                }}
+            >
+                {type === 'rectangle' && (
+                    <div
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            backgroundColor: color,
+                        }}
+                    />
+                )}
+                {type === 'circle' && (
+                    <div
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            backgroundColor: color,
+                            borderRadius: '50%',
+                        }}
+                    />
+                )}
+                {type === 'line' && (
+                    <div
+                        style={{
+                            position: 'absolute',
+                            top: height / 2,
+                            left: 0,
+                            width: width,
+                            height: `${lineWidth}px`,
+                            backgroundColor: color,
+                        }}
+                    />
+                )}
+                {selected && (<ResizeHandles onResizeStart={handleResizeMouseDown}/>)}
+            </div>
+        </>
+
     );
 };
 
