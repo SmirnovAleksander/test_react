@@ -3,6 +3,7 @@ import '../App.css';
 import TextElement from "./TextElement.tsx";
 import ImageElement from "./ImageElement.tsx";
 import ShapeElement from "./ShapeElement.tsx";
+import ElementList from "./ElementList.tsx";
 
 interface TextElementProps {
     id: number;
@@ -15,6 +16,7 @@ interface TextElementProps {
     fontSize: number; // Размер шрифта
     fontFamily: string; // Шрифт
     color: string; // Цвет текста
+    rotation: number;
 }
 
 interface ImageElementProps {
@@ -25,6 +27,7 @@ interface ImageElementProps {
     left: number;
     width: number;
     height: number;
+    rotation: number;
 }
 
 interface ShapeElementProps {
@@ -35,6 +38,7 @@ interface ShapeElementProps {
     width: number;
     height: number;
     color: string; // Цвет фигуры
+    rotation: number;
 }
 
 // Объединенный интерфейс для элементов
@@ -67,7 +71,8 @@ const SlideEditor: React.FC = () => {
             top: 100,
             left: 100,
             width: 200,
-            height: 50
+            height: 50,
+            rotation: 0,
         }]);
     };
 
@@ -80,6 +85,7 @@ const SlideEditor: React.FC = () => {
             left: 150,
             width: 100,
             height: 100,
+            rotation: 0,
         }]);
     };
 
@@ -92,10 +98,9 @@ const SlideEditor: React.FC = () => {
             width: 100,
             height: 100,
             color: '#ff0000',
+            rotation: 0,
         }]);
     };
-
-
 
     const selectElement = (id: number) => {
         setSelectedElementId(id);
@@ -130,7 +135,6 @@ const SlideEditor: React.FC = () => {
         }));
     };
 
-
     const updateElementFontSize = (id: number, fontSize: number) => {
         setElements(elements.map(el => el.id === id ? { ...el, fontSize } : el));
     };
@@ -155,6 +159,10 @@ const SlideEditor: React.FC = () => {
     const autoResizeTextarea = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         event.target.style.height = 'auto'; // Сброс высоты для пересчета
         event.target.style.height = `${event.target.scrollHeight}px`; // Задание новой высоты в зависимости от содержимого
+    };
+
+    const updateRotation = (id: number, newRotation: number) => {
+        setElements(elements.map(el => el.id === id ? { ...el, rotation: newRotation } : el));
     };
 
 
@@ -232,20 +240,53 @@ const SlideEditor: React.FC = () => {
                             onChange={(e) => updateElementColor(selectedElement.id, e.target.value)}
                         />
                     </div>
-                    <label>Текст:</label>
-                    <textarea
-                        value={selectedElement.content}
-                        onChange={(e) => {
-                            handleTextChange(selectedElement.id, e.target.value);
-                            autoResizeTextarea(e);  // Автоматическое изменение высоты
-                        }}
-                        style={{
-                            width: '100%',
-                            minHeight: '50px',
-                            resize: 'none', // Отключаем возможность изменения размера пользователем
-                            overflow: 'hidden', // Скролл скрываем
-                        }}
-                    />
+                    <div>
+                        <label>Текст:</label>
+                        <textarea
+                            value={selectedElement.content}
+                            onChange={(e) => {
+                                handleTextChange(selectedElement.id, e.target.value);
+                                autoResizeTextarea(e);  // Автоматическое изменение высоты
+                            }}
+                            style={{
+                                width: '100%',
+                                minHeight: '50px',
+                                resize: 'none', // Отключаем возможность изменения размера пользователем
+                                overflow: 'hidden', // Скролл скрываем
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <label>Угол поворота:</label>
+                        <input
+                            type="number"
+                            value={selectedElement.rotation || 0}
+                            onChange={(e) => {updateRotation(selectedElement.id, Number(e.target.value))}}
+                        />
+                    </div>
+                    <div style={{marginTop: '10px'}}>
+                        <button onClick={() => {updateRotation(selectedElement.id, 0)}}>0°</button>
+                        <button onClick={() => {updateRotation(selectedElement.id, 45)}}>45°</button>
+                        <button onClick={() => {updateRotation(selectedElement.id, 90)}}>90°</button>
+                        <button onClick={() => {updateRotation(selectedElement.id, 135)}}>135°</button>
+                    </div>
+                    <div style={{marginTop: '10px'}}>
+                        <button onClick={() => {updateRotation(selectedElement.id, 180)}}>180°</button>
+                        <button onClick={() => {updateRotation(selectedElement.id, 225)}}>225°</button>
+                        <button onClick={() => {updateRotation(selectedElement.id, 270)}}>270°</button>
+                        <button onClick={() => {updateRotation(selectedElement.id, 315)}}>315°</button>
+                    </div>
+                    <div>
+                        <label>Поворот:</label>
+                        <input
+                            type="range"
+                            min="0" // Минимальный угол поворота
+                            max="360" // Максимальный угол поворота
+                            value={selectedElement.rotation || 0}
+                            onChange={(e) => {updateRotation(selectedElement.id, Number(e.target.value))}}
+                        />
+                        <span>{selectedElement.rotation || 0}°</span>
+                    </div>
                 </>
             );
         } else if (selectedElement.type === 'image') {
@@ -290,6 +331,20 @@ const SlideEditor: React.FC = () => {
                             type="text"
                             value={selectedElement.content}
                             onChange={(e) => updateElementContent(selectedElement.id, e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label>Угол поворота:</label>
+                        <input
+                            type="number"
+                            value={selectedElement.rotation || 0}
+                            onChange={(e) => {
+                                const newRotation = Number(e.target.value);
+                                setElements(elements.map(el => el.id === selectedElement.id ? {
+                                    ...el,
+                                    rotation: newRotation
+                                } : el));
+                            }}
                         />
                     </div>
                 </>
@@ -338,6 +393,20 @@ const SlideEditor: React.FC = () => {
                             onChange={(e) => updateElementColor(selectedElement.id, e.target.value)}
                         />
                     </div>
+                    <div>
+                        <label>Угол поворота:</label>
+                        <input
+                            type="number"
+                            value={selectedElement.rotation || 0}
+                            onChange={(e) => {
+                                const newRotation = Number(e.target.value);
+                                setElements(elements.map(el => el.id === selectedElement.id ? {
+                                    ...el,
+                                    rotation: newRotation
+                                } : el));
+                            }}
+                        />
+                    </div>
                 </>
             );
         }
@@ -371,6 +440,7 @@ const SlideEditor: React.FC = () => {
                                     fontSize={el.fontSize}
                                     fontFamily={el.fontFamily}
                                     color={el.color}
+                                    rotation={el.rotation}
                                     top={el.top}
                                     left={el.left}
                                     width={el.width}
@@ -387,6 +457,7 @@ const SlideEditor: React.FC = () => {
                                     key={el.id}
                                     id={el.id}
                                     src={el.content}
+                                    rotation={el.rotation}
                                     top={el.top}
                                     left={el.left}
                                     width={el.width}
@@ -405,6 +476,7 @@ const SlideEditor: React.FC = () => {
                                     key={el.id}
                                     id={el.id}
                                     type={el.type}
+                                    rotation={el.rotation}
                                     top={el.top}
                                     left={el.left}
                                     width={el.width}
@@ -422,6 +494,13 @@ const SlideEditor: React.FC = () => {
                     }
                 })}
 
+            </div>
+            <div className="elements-list">
+                <ElementList
+                    elements={elements}
+                    selectedElementId={selectedElementId}
+                    onSelectElement={selectElement}
+                />
             </div>
         </div>
     );

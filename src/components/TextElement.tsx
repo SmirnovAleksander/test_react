@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ResizeHandles from "./ResizeHandles.tsx";
 
 interface TextElementProps {
     id: number;
@@ -6,6 +7,7 @@ interface TextElementProps {
     fontSize?: number;
     fontFamily?: string;
     color?: string;
+    rotation: number;
     top: number;
     left: number;
     width: number;
@@ -22,6 +24,7 @@ const TextElement: React.FC<TextElementProps> = ({
                                                      fontSize,
                                                      fontFamily,
                                                      color,
+                                                     rotation,
                                                      top,
                                                      left,
                                                      width,
@@ -106,127 +109,14 @@ const TextElement: React.FC<TextElementProps> = ({
                 cursor: isDragging ? 'move' : 'default',
                 userSelect: 'none', // Отключает выделение текста
                 color: `${color}`,
+                transform: `rotate(${rotation}deg)`,
                 fontSize: `${fontSize}px`,
                 fontFamily: `${fontFamily}`,
             }}
             onMouseDown={handleMouseDown}
         >
             <div>{text}</div>
-            {selected && (
-                <>
-                    {/* Угловые маркеры */}
-                    <div
-                        className="resize-handle"
-                        style={{
-                            position: 'absolute',
-                            right: 0,
-                            bottom: 0,
-                            width: '10px',
-                            height: '10px',
-                            backgroundColor: 'blue',
-                            cursor: 'nwse-resize',
-                        }}
-                        onMouseDown={(e) => handleResizeMouseDown(e, 'bottom-right')}
-                    ></div>
-                    <div
-                        className="resize-handle"
-                        style={{
-                            position: 'absolute',
-                            left: 0,
-                            bottom: 0,
-                            width: '10px',
-                            height: '10px',
-                            backgroundColor: 'blue',
-                            cursor: 'nesw-resize',
-                        }}
-                        onMouseDown={(e) => handleResizeMouseDown(e, 'bottom-left')}
-                    ></div>
-                    <div
-                        className="resize-handle"
-                        style={{
-                            position: 'absolute',
-                            right: 0,
-                            top: 0,
-                            width: '10px',
-                            height: '10px',
-                            backgroundColor: 'blue',
-                            cursor: 'sw-resize',
-                        }}
-                        onMouseDown={(e) => handleResizeMouseDown(e, 'top-right')}
-                    ></div>
-                    <div
-                        className="resize-handle"
-                        style={{
-                            position: 'absolute',
-                            left: 0,
-                            top: 0,
-                            width: '10px',
-                            height: '10px',
-                            backgroundColor: 'blue',
-                            cursor: 'se-resize',
-                        }}
-                        onMouseDown={(e) => handleResizeMouseDown(e, 'top-left')}
-                    ></div>
-
-                    {/* Средние маркеры */}
-                    <div
-                        className="resize-handle"
-                        style={{
-                            position: 'absolute',
-                            left: '50%',
-                            top: 0,
-                            width: '10px',
-                            height: '10px',
-                            backgroundColor: 'blue',
-                            cursor: 'n-resize',
-                            transform: 'translateX(-50%)',
-                        }}
-                        onMouseDown={(e) => handleResizeMouseDown(e, 'top')}
-                    ></div>
-                    <div
-                        className="resize-handle"
-                        style={{
-                            position: 'absolute',
-                            left: '50%',
-                            bottom: 0,
-                            width: '10px',
-                            height: '10px',
-                            backgroundColor: 'blue',
-                            cursor: 's-resize',
-                            transform: 'translateX(-50%)',
-                        }}
-                        onMouseDown={(e) => handleResizeMouseDown(e, 'bottom')}
-                    ></div>
-                    <div
-                        className="resize-handle"
-                        style={{
-                            position: 'absolute',
-                            right: 0,
-                            top: '50%',
-                            width: '10px',
-                            height: '10px',
-                            backgroundColor: 'blue',
-                            cursor: 'e-resize',
-                            transform: 'translateY(-50%)',
-                        }}
-                        onMouseDown={(e) => handleResizeMouseDown(e, 'right')}
-                    ></div>
-                    <div
-                        className="resize-handle"
-                        style={{
-                            position: 'absolute',
-                            left: 0,
-                            top: '50%',
-                            width: '10px',
-                            height: '10px',
-                            backgroundColor: 'blue',
-                            cursor: 'w-resize',
-                            transform: 'translateY(-50%)',
-                        }}
-                        onMouseDown={(e) => handleResizeMouseDown(e, 'left')}
-                    ></div>
-                </>
-            )}
+            {selected && (<ResizeHandles onResizeStart={handleResizeMouseDown} />)}
         </div>
     );
 };
