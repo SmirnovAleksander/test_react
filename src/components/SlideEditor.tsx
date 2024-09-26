@@ -2,20 +2,44 @@ import React, { useState } from 'react';
 import '../App.css';
 import TextElement from "./TextElement.tsx";
 import ImageElement from "./ImageElement.tsx";
+import ShapeElement from "./ShapeElement.tsx";
 
-
-interface ElementProps {
+interface TextElementProps {
     id: number;
-    type: 'text' | 'image';
-    content: string;
-    fontSize?: number;
-    fontFamily?: string;
-    color?: string;
+    type: 'text';
+    content: string; // Текстовое содержимое
+    top: number;
+    left: number;
+    width: number;
+    height: number;
+    fontSize: number; // Размер шрифта
+    fontFamily: string; // Шрифт
+    color: string; // Цвет текста
+}
+
+interface ImageElementProps {
+    id: number;
+    type: 'image';
+    content: string; // URL изображения
     top: number;
     left: number;
     width: number;
     height: number;
 }
+
+interface ShapeElementProps {
+    id: number;
+    type: 'rectangle' | 'circle' | 'line';
+    top: number;
+    left: number;
+    width: number;
+    height: number;
+    color: string; // Цвет фигуры
+}
+
+// Объединенный интерфейс для элементов
+type ElementProps = TextElementProps | ImageElementProps | ShapeElementProps;
+
 
 const availableFonts = [
     'Arial',
@@ -58,6 +82,20 @@ const SlideEditor: React.FC = () => {
             height: 100,
         }]);
     };
+
+    const addShapeElement = (type: 'rectangle' | 'circle' | 'line') => {
+        setElements([...elements, {
+            id: elements.length + 1,
+            type,
+            top: 200,
+            left: 200,
+            width: 100,
+            height: 100,
+            color: '#ff0000',
+        }]);
+    };
+
+
 
     const selectElement = (id: number) => {
         setSelectedElementId(id);
@@ -108,6 +146,17 @@ const SlideEditor: React.FC = () => {
     const updateElementContent = (id: number, content: string) => {
         setElements(elements.map(el => el.id === id ? { ...el, content } : el));
     };
+
+
+    //для изменения размера текстового поля(не особо и нужно:D)
+    const handleTextChange = (id: number, newText: string) => {
+        setElements(elements.map(el => el.id === id ? { ...el, content: newText } : el));
+    };
+    const autoResizeTextarea = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        event.target.style.height = 'auto'; // Сброс высоты для пересчета
+        event.target.style.height = `${event.target.scrollHeight}px`; // Задание новой высоты в зависимости от содержимого
+    };
+
 
     const renderPropertiesPanel = () => {
         const selectedElement = elements.find(el => el.id === selectedElementId);
@@ -183,14 +232,20 @@ const SlideEditor: React.FC = () => {
                             onChange={(e) => updateElementColor(selectedElement.id, e.target.value)}
                         />
                     </div>
-                    <div>
-                        <label>Текст:</label>
-                        <input
-                            type="text"
-                            value={selectedElement.content}
-                            onChange={(e) => updateElementContent(selectedElement.id, e.target.value)}
-                        />
-                    </div>
+                    <label>Текст:</label>
+                    <textarea
+                        value={selectedElement.content}
+                        onChange={(e) => {
+                            handleTextChange(selectedElement.id, e.target.value);
+                            autoResizeTextarea(e);  // Автоматическое изменение высоты
+                        }}
+                        style={{
+                            width: '100%',
+                            minHeight: '50px',
+                            resize: 'none', // Отключаем возможность изменения размера пользователем
+                            overflow: 'hidden', // Скролл скрываем
+                        }}
+                    />
                 </>
             );
         } else if (selectedElement.type === 'image') {
@@ -239,6 +294,52 @@ const SlideEditor: React.FC = () => {
                     </div>
                 </>
             );
+        } else {
+            return (
+                <>
+                    <h3>Параметры изображенческого элемента</h3>
+                    <div>
+                        <label>Положение Y:</label>
+                        <input
+                            type="number"
+                            value={selectedElement.top}
+                            onChange={(e) => updateElementPosition(selectedElement.id, Number(e.target.value), selectedElement.left)}
+                        />
+                    </div>
+                    <div>
+                        <label>Положение X:</label>
+                        <input
+                            type="number"
+                            value={selectedElement.left}
+                            onChange={(e) => updateElementPosition(selectedElement.id, selectedElement.top, Number(e.target.value))}
+                        />
+                    </div>
+                    <div>
+                        <label>Ширина:</label>
+                        <input
+                            type="number"
+                            value={selectedElement.width}
+                            onChange={(e) => updateElementSize(selectedElement.id, Number(e.target.value), selectedElement.height)}
+                        />
+                    </div>
+                    <div>
+                        <label>Высота:</label>
+                        <input
+                            type="number"
+                            value={selectedElement.height}
+                            onChange={(e) => updateElementSize(selectedElement.id, selectedElement.width, Number(e.target.value))}
+                        />
+                    </div>
+                    <div>
+                        <label>Цвет текста:</label>
+                        <input
+                            type="color"
+                            value={selectedElement.color}
+                            onChange={(e) => updateElementColor(selectedElement.id, e.target.value)}
+                        />
+                    </div>
+                </>
+            );
         }
         return null;
     };
@@ -251,43 +352,76 @@ const SlideEditor: React.FC = () => {
                     onClick={() => addImageElement('https://avatars.dzeninfra.ru/get-zen_doc/1333513/pub_5fb9552f9d2ffe38eeb21401_5fb955f29d2ffe38eeb3305f/scale_1200')}>Добавить
                     изображение
                 </button>
+                <button onClick={() => addShapeElement('rectangle')}>Добавить прямоугольник</button>
+                <button onClick={() => addShapeElement('circle')}>Добавить круг</button>
+                <button onClick={() => addShapeElement('line')}>Добавить линию</button>
             </div>
             <div className="properties-panel">
                 {renderPropertiesPanel()}
             </div>
             <div className="slide">
-                {elements.map(el => (
-                    el.type === 'text' ?
-                        <TextElement
-                            key={el.id}
-                            id={el.id}
-                            text={el.content}
-                            fontSize={el.fontSize}
-                            fontFamily={el.fontFamily}
-                            color={el.color}
-                            top={el.top}
-                            left={el.left}
-                            width={el.width}
-                            height={el.height}
-                            selected={el.id === selectedElementId}
-                            onSelect={selectElement}
-                            updatePosition={updateElementPosition}
-                            updateSize={updateElementSize}
-                        /> :
-                        <ImageElement
-                            key={el.id}
-                            id={el.id}
-                            src={el.content}
-                            top={el.top}
-                            left={el.left}
-                            width={el.width}
-                            height={el.height}
-                            selected={el.id === selectedElementId}
-                            onSelect={selectElement}
-                            updatePosition={updateElementPosition}
-                            updateSize={updateElementSize}
-                        />
-                ))}
+                {elements.map(el => {
+                    switch (el.type) {
+                        case 'text':
+                            return (
+                                <TextElement
+                                    key={el.id}
+                                    id={el.id}
+                                    text={el.content}
+                                    fontSize={el.fontSize}
+                                    fontFamily={el.fontFamily}
+                                    color={el.color}
+                                    top={el.top}
+                                    left={el.left}
+                                    width={el.width}
+                                    height={el.height}
+                                    selected={el.id === selectedElementId}
+                                    onSelect={selectElement}
+                                    updatePosition={updateElementPosition}
+                                    updateSize={updateElementSize}
+                                />
+                            );
+                        case 'image':
+                            return (
+                                <ImageElement
+                                    key={el.id}
+                                    id={el.id}
+                                    src={el.content}
+                                    top={el.top}
+                                    left={el.left}
+                                    width={el.width}
+                                    height={el.height}
+                                    selected={el.id === selectedElementId}
+                                    onSelect={selectElement}
+                                    updatePosition={updateElementPosition}
+                                    updateSize={updateElementSize}
+                                />
+                            );
+                        case 'rectangle':
+                        case 'circle':
+                        case 'line':
+                            return (
+                                <ShapeElement
+                                    key={el.id}
+                                    id={el.id}
+                                    type={el.type}
+                                    top={el.top}
+                                    left={el.left}
+                                    width={el.width}
+                                    height={el.height}
+                                    color={el.color!} // Убедитесь, что цвет задан
+                                    selected={el.id === selectedElementId}
+                                    onSelect={selectElement}
+                                    updatePosition={updateElementPosition}
+                                    updateSize={updateElementSize}
+                                />
+                            );
+                        // Добавьте дополнительные case для других типов элементов, если необходимо
+                        default:
+                            return null; // На случай, если тип элемента не поддерживается
+                    }
+                })}
+
             </div>
         </div>
     );
