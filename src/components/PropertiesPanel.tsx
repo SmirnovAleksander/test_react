@@ -11,6 +11,7 @@ interface PropertiesPanelProps {
     updateRotation: (id: number, rotation: number) => void;
     handleTextChange: (id: number, text: string) => void;
     updateLineWidth: (id: number, lineWidth: number) => void;
+    updateBorderRadius: (id: number, borderRadius: number) => void;
     autoResizeTextarea: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
     updateElementContent: (id: number, content: string) => void;
 }
@@ -36,6 +37,7 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                                                              updateRotation,
                                                              handleTextChange,
                                                              updateLineWidth,
+                                                             updateBorderRadius,
                                                              autoResizeTextarea,
                                                              updateElementContent}) => {
     if (!selectedElement) return null;
@@ -125,14 +127,6 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                         }}
                     />
                 </div>
-                <div>
-                    <label>Угол поворота:</label>
-                    <input
-                        type="number"
-                        value={selectedElement.rotation || 0}
-                        onChange={(e) => {updateRotation(selectedElement.id, Number(e.target.value))}}
-                    />
-                </div>
                 <div style={{marginTop: '10px'}}>
                     <button onClick={() => {updateRotation(selectedElement.id, 0)}}>0°</button>
                     <button onClick={() => {updateRotation(selectedElement.id, 45)}}>45°</button>
@@ -200,16 +194,6 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                         type="text"
                         value={selectedElement.content}
                         onChange={(e) => updateElementContent(selectedElement.id, e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label>Угол поворота:</label>
-                    <input
-                        type="number"
-                        value={selectedElement.rotation || 0}
-                        onChange={(e) => {
-                            updateRotation(selectedElement.id, Number(e.target.value))
-                        }}
                     />
                 </div>
                 <div style={{marginTop: '10px'}}>
@@ -307,16 +291,6 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                         onChange={(e) => updateElementColor(selectedElement.id, e.target.value)}
                     />
                 </div>
-                <div>
-                    <label>Угол поворота:</label>
-                    <input
-                        type="number"
-                        value={selectedElement.rotation || 0}
-                        onChange={(e) => {
-                            updateRotation(selectedElement.id, Number(e.target.value))
-                        }}
-                    />
-                </div>
                 <div style={{marginTop: '10px'}}>
                     <button onClick={() => {
                         updateRotation(selectedElement.id, 0)
@@ -378,6 +352,19 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                         }}
                     />
                     <span>{selectedElement.lineWidth || 2}°</span>
+                </div> : <div></div>}
+                {selectedElement.type === 'rectangle' ? <div>
+                    <label>Радиус закругления: </label>
+                    <input
+                        type="range"
+                        min="2"
+                        max="100"
+                        value={selectedElement.borderRadius || 0}
+                        onChange={(e) => {
+                            updateBorderRadius(selectedElement.id, Number(e.target.value))
+                        }}
+                    />
+                    <span>{selectedElement.borderRadius || 0}°</span>
                 </div> : <div></div>}
             </>
         );

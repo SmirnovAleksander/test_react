@@ -43,6 +43,7 @@ const SlideEditor: React.FC = () => {
             color: '#ff0000',
             rotation: 0,
             lineWidth: 2,
+            borderRadius: 0
         }]);
     };
 
@@ -98,6 +99,9 @@ const SlideEditor: React.FC = () => {
     const updateLineWidth = (id: number, newLineWidth: number) => {
         setElements(elements.map(el => el.id === id ? { ...el, lineWidth: newLineWidth } : el));
     };
+    const updateBorderRadius = (id: number, newBorderRadius: number) => {
+        setElements(elements.map(el => el.id === id ? { ...el, borderRadius: newBorderRadius } : el));
+    };
 
     //для изменения размера текстового поля(не особо и нужно:D)
     const handleTextChange = (id: number, newText: string) => {
@@ -139,6 +143,7 @@ const SlideEditor: React.FC = () => {
                 updateRotation={updateRotation}
                 handleTextChange={handleTextChange}
                 updateLineWidth={updateLineWidth}
+                updateBorderRadius={updateBorderRadius}
             />
         )
 
@@ -208,6 +213,7 @@ const SlideEditor: React.FC = () => {
                                     type={el.type}
                                     rotation={el.rotation}
                                     lineWidth={el.lineWidth!}
+                                    borderRadius={el.borderRadius}
                                     position={el.position}
                                     size={el.size}
                                     color={el.color!}

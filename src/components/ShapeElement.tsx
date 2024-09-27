@@ -6,7 +6,8 @@ interface ShapeElementProps {
     type: 'rectangle' | 'circle' | 'line';
     color: string;
     rotation: number;
-    lineWidth: number;
+    lineWidth?: number;
+    borderRadius?: number;
     position: { x: number; y: number };
     size: { width: number; height: number };
     selected: boolean;
@@ -21,6 +22,7 @@ const ShapeElement: React.FC<ShapeElementProps> = ({
                                                        color,
                                                        rotation,
                                                        lineWidth,
+                                                       borderRadius,
                                                        position,
                                                        size,
                                                        selected,
@@ -114,6 +116,7 @@ const ShapeElement: React.FC<ShapeElementProps> = ({
                             width: '100%',
                             height: '100%',
                             backgroundColor: color,
+                            borderRadius: `${borderRadius}px`
                         }}
                     />
                 )}

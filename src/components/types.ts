@@ -27,6 +27,7 @@ export interface ShapeElementProps {
     color: string; // Цвет фигуры
     rotation: number;
     lineWidth?: number;
+    borderRadius?: number;
 }
 
 // Объединенный интерфейс для элементов
