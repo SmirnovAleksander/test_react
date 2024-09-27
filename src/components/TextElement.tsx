@@ -4,14 +4,12 @@ import ResizeHandles from "./ResizeHandles.tsx";
 interface TextElementProps {
     id: number;
     text: string;
-    fontSize?: number;
-    fontFamily?: string;
-    color?: string;
+    fontSize: number;
+    fontFamily: string;
+    color: string;
     rotation: number;
-    top: number;
-    left: number;
-    width: number;
-    height: number;
+    position: { x: number; y: number };
+    size: { width: number; height: number };
     selected: boolean;
     onSelect: (id: number) => void;
     updatePosition: (id: number, top: number, left: number) => void;
@@ -26,10 +24,8 @@ const TextElement: React.FC<TextElementProps> = ({
                                                      fontFamily,
                                                      color,
                                                      rotation,
-                                                     top,
-                                                     left,
-                                                     width,
-                                                     height,
+                                                     position,
+                                                     size,
                                                      selected,
                                                      onSelect,
                                                      updatePosition,
@@ -58,17 +54,17 @@ const TextElement: React.FC<TextElementProps> = ({
             e.preventDefault(); // Отключаем выделение
             onSelect(id);
             setIsDragging(true);
-            setDragStart({ x: e.clientX - left, y: e.clientY - top });
+            setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y });
         }
      };
 
     const handleMouseMove = (e: MouseEvent) => {
         if (isDragging) {
-            updatePosition(id, e.clientY - dragStart.y, e.clientX - dragStart.x);
+            updatePosition(id, e.clientX - dragStart.x, e.clientY - dragStart.y);
         }
         if (isResizing) {
-            let newWidth = width;
-            let newHeight = height;
+            let newWidth = size.width;
+            let newHeight = size.height;
 
             // Изменяем размеры в зависимости от направления
             if (resizeStart.direction.includes('right')) {
@@ -95,7 +91,7 @@ const TextElement: React.FC<TextElementProps> = ({
         e.preventDefault(); // Отключаем выделение
         setIsResizing(true);
         setDragStart({ x: e.clientX, y: e.clientY });
-        setResizeStart({ width, height, direction });
+        setResizeStart({ width: size.width, height: size.height, direction });
     };
 
     //////для textarea
@@ -141,10 +137,10 @@ const TextElement: React.FC<TextElementProps> = ({
         <div
             className={`text-element ${selected ? 'selected' : ''}`}
             style={{
-                top,
-                left,
-                width,
-                height,
+                top: position.y,
+                left: position.x,
+                width: size.width,
+                height: size.height,
                 position: 'absolute',
                 border: selected ? '1px solid blue' : 'none',
                 cursor: isDragging ? 'move' : 'default',

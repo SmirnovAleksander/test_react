@@ -7,10 +7,8 @@ interface ShapeElementProps {
     color: string;
     rotation: number;
     lineWidth: number;
-    top: number;
-    left: number;
-    width: number;
-    height: number;
+    position: { x: number; y: number };
+    size: { width: number; height: number };
     selected: boolean;
     onSelect: (id: number) => void;
     updatePosition: (id: number, top: number, left: number) => void;
@@ -23,10 +21,8 @@ const ShapeElement: React.FC<ShapeElementProps> = ({
                                                        color,
                                                        rotation,
                                                        lineWidth,
-                                                       top,
-                                                       left,
-                                                       width,
-                                                       height,
+                                                       position,
+                                                       size,
                                                        selected,
                                                        onSelect,
                                                        updatePosition,
@@ -42,16 +38,16 @@ const ShapeElement: React.FC<ShapeElementProps> = ({
         e.preventDefault(); // Отключаем выделение
         onSelect(id);
         setIsDragging(true);
-        setDragStart({ x: e.clientX - left, y: e.clientY - top });
+        setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y });
     };
 
     const handleMouseMove = (e: MouseEvent) => {
         if (isDragging) {
-            updatePosition(id, e.clientY - dragStart.y, e.clientX - dragStart.x);
+            updatePosition(id, e.clientX - dragStart.x, e.clientY - dragStart.y);
         }
         if (isResizing) {
-            let newWidth = width;
-            let newHeight = height;
+            let newWidth = size.width;
+            let newHeight = size.height;
 
             // Изменяем размеры в зависимости от направления
             if (resizeStart.direction.includes('right')) {
@@ -78,7 +74,7 @@ const ShapeElement: React.FC<ShapeElementProps> = ({
         e.preventDefault(); // Отключаем выделение
         setIsResizing(true);
         setDragStart({ x: e.clientX, y: e.clientY });
-        setResizeStart({ width, height, direction });
+        setResizeStart({ width: size.width, height: size.height, direction });
     };
 
     useEffect(() => {
@@ -96,21 +92,14 @@ const ShapeElement: React.FC<ShapeElementProps> = ({
 
     return (
         <>
-            {/*<input*/}
-            {/*    type="range"*/}
-            {/*    min="1"*/}
-            {/*    max="10"*/}
-            {/*    value={lineWidth}*/}
-            {/*    onChange={(e) => setLineWidth(Number(e.target.value))} // Обновляем состояние при изменении*/}
-            {/*/>*/}
             <div
                 onMouseDown={handleMouseDown}
                 style={{
                     position: 'absolute',
-                    top,
-                    left,
-                    width,
-                    height,
+                    top: position.y,
+                    left: position.x,
+                    width: size.width,
+                    height: size.height,
                     backgroundColor: selected ? 'rgba(0, 0, 255, 0.3)' : 'transparent',
                     border: selected ? `2px solid blue` : 'none',
                     cursor: isDragging ? 'move' : 'default',
@@ -142,9 +131,9 @@ const ShapeElement: React.FC<ShapeElementProps> = ({
                     <div
                         style={{
                             position: 'absolute',
-                            top: height / 2,
+                            top: size.height / 2,
                             left: 0,
-                            width: width,
+                            width: size.width,
                             height: `${lineWidth}px`,
                             backgroundColor: color,
                         }}

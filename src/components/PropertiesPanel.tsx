@@ -48,32 +48,32 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                     <label>Положение Y:</label>
                     <input
                         type="number"
-                        value={selectedElement.top}
-                        onChange={(e) => updateElementPosition(selectedElement.id, Number(e.target.value), selectedElement.left)}
+                        value={selectedElement.position.y}
+                        onChange={(e) => updateElementPosition(selectedElement.id, Number(e.target.value), selectedElement.position.x)}
                     />
                 </div>
                 <div>
                     <label>Положение X:</label>
                     <input
                         type="number"
-                        value={selectedElement.left}
-                        onChange={(e) => updateElementPosition(selectedElement.id, selectedElement.top, Number(e.target.value))}
+                        value={selectedElement.position.x}
+                        onChange={(e) => updateElementPosition(selectedElement.id, selectedElement.position.y, Number(e.target.value))}
                     />
                 </div>
                 <div>
                     <label>Ширина:</label>
                     <input
                         type="number"
-                        value={selectedElement.width}
-                        onChange={(e) => updateElementSize(selectedElement.id, Number(e.target.value), selectedElement.height)}
+                        value={selectedElement.size.width}
+                        onChange={(e) => updateElementSize(selectedElement.id, Number(e.target.value), selectedElement.size.height)}
                     />
                 </div>
                 <div>
                     <label>Высота:</label>
                     <input
                         type="number"
-                        value={selectedElement.height}
-                        onChange={(e) => updateElementSize(selectedElement.id, selectedElement.width, Number(e.target.value))}
+                        value={selectedElement.size.height}
+                        onChange={(e) => updateElementSize(selectedElement.id, selectedElement.size.width, Number(e.target.value))}
                     />
                 </div>
                 <div>
@@ -166,32 +166,32 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                     <label>Положение Y:</label>
                     <input
                         type="number"
-                        value={selectedElement.top}
-                        onChange={(e) => updateElementPosition(selectedElement.id, Number(e.target.value), selectedElement.left)}
+                        value={selectedElement.position.y}
+                        onChange={(e) => updateElementPosition(selectedElement.id, Number(e.target.value), selectedElement.position.x)}
                     />
                 </div>
                 <div>
                     <label>Положение X:</label>
                     <input
                         type="number"
-                        value={selectedElement.left}
-                        onChange={(e) => updateElementPosition(selectedElement.id, selectedElement.top, Number(e.target.value))}
+                        value={selectedElement.position.x}
+                        onChange={(e) => updateElementPosition(selectedElement.id, selectedElement.position.y, Number(e.target.value))}
                     />
                 </div>
                 <div>
                     <label>Ширина:</label>
                     <input
                         type="number"
-                        value={selectedElement.width}
-                        onChange={(e) => updateElementSize(selectedElement.id, Number(e.target.value), selectedElement.height)}
+                        value={selectedElement.size.width}
+                        onChange={(e) => updateElementSize(selectedElement.id, Number(e.target.value), selectedElement.size.height)}
                     />
                 </div>
                 <div>
                     <label>Высота:</label>
                     <input
                         type="number"
-                        value={selectedElement.height}
-                        onChange={(e) => updateElementSize(selectedElement.id, selectedElement.width, Number(e.target.value))}
+                        value={selectedElement.size.height}
+                        onChange={(e) => updateElementSize(selectedElement.id, selectedElement.size.width, Number(e.target.value))}
                     />
                 </div>
                 <div>
@@ -271,32 +271,32 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                     <label>Положение Y:</label>
                     <input
                         type="number"
-                        value={selectedElement.top}
-                        onChange={(e) => updateElementPosition(selectedElement.id, Number(e.target.value), selectedElement.left)}
+                        value={selectedElement.position.y}
+                        onChange={(e) => updateElementPosition(selectedElement.id, Number(e.target.value), selectedElement.position.x)}
                     />
                 </div>
                 <div>
                     <label>Положение X:</label>
                     <input
                         type="number"
-                        value={selectedElement.left}
-                        onChange={(e) => updateElementPosition(selectedElement.id, selectedElement.top, Number(e.target.value))}
+                        value={selectedElement.position.x}
+                        onChange={(e) => updateElementPosition(selectedElement.id, selectedElement.position.y, Number(e.target.value))}
                     />
                 </div>
                 <div>
                     <label>Ширина:</label>
                     <input
                         type="number"
-                        value={selectedElement.width}
-                        onChange={(e) => updateElementSize(selectedElement.id, Number(e.target.value), selectedElement.height)}
+                        value={selectedElement.size.width}
+                        onChange={(e) => updateElementSize(selectedElement.id, Number(e.target.value), selectedElement.size.height)}
                     />
                 </div>
                 <div>
                     <label>Высота:</label>
                     <input
                         type="number"
-                        value={selectedElement.height}
-                        onChange={(e) => updateElementSize(selectedElement.id, selectedElement.width, Number(e.target.value))}
+                        value={selectedElement.size.height}
+                        onChange={(e) => updateElementSize(selectedElement.id, selectedElement.size.width, Number(e.target.value))}
                     />
                 </div>
                 <div>

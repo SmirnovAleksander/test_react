@@ -1,17 +1,15 @@
-import React, {useState, useEffect} from 'react';
-import ResizeHandles from "./ResizeHandles.tsx";
+import React, { useState, useEffect, useRef } from 'react';
+import ResizeHandles from './ResizeHandles.tsx';
 
 interface ImageElementProps {
     id: number;
     src: string;
     rotation: number;
-    top: number;
-    left: number;
-    width: number;
-    height: number;
+    position: { x: number; y: number };
+    size: { width: number; height: number };
     selected: boolean;
     onSelect: (id: number) => void;
-    updatePosition: (id: number, top: number, left: number) => void;
+    updatePosition: (id: number, x: number, y: number) => void;
     updateSize: (id: number, width: number, height: number) => void;
 }
 
@@ -19,10 +17,8 @@ const ImageElement: React.FC<ImageElementProps> = ({
                                                        id,
                                                        src,
                                                        rotation,
-                                                       top,
-                                                       left,
-                                                       width,
-                                                       height,
+                                                       position,
+                                                       size,
                                                        selected,
                                                        onSelect,
                                                        updatePosition,
@@ -30,35 +26,36 @@ const ImageElement: React.FC<ImageElementProps> = ({
                                                    }) => {
     const [isDragging, setIsDragging] = useState(false);
     const [isResizing, setIsResizing] = useState(false);
-    const [dragStart, setDragStart] = useState({x: 0, y: 0});
-    const [resizeStart, setResizeStart] = useState({width: 0, height: 0, direction: ''});
+    const dragStart = useRef({ x: 0, y: 0 });
+    const resizeStart = useRef({ width: 0, height: 0, direction: '' });
 
     const handleMouseDown = (e: React.MouseEvent) => {
         e.stopPropagation();
-        e.preventDefault(); // Отключаем выделение
+        e.preventDefault();
         onSelect(id);
         setIsDragging(true);
-        setDragStart({x: e.clientX - left, y: e.clientY - top});
+        dragStart.current = { x: e.clientX - position.x, y: e.clientY - position.y };
     };
 
     const handleMouseMove = (e: MouseEvent) => {
         if (isDragging) {
-            updatePosition(id, e.clientY - dragStart.y, e.clientX - dragStart.x);
+            updatePosition(id, e.clientX - dragStart.current.x, e.clientY - dragStart.current.y);
         }
         if (isResizing) {
-            // Изменяем размеры в зависимости от направления
-            let newWidth = width;
-            let newHeight = height;
+            const { width, height, direction } = resizeStart.current;
+            let newWidth = size.width;
+            let newHeight = size.height;
 
-            if (resizeStart.direction.includes('left')) {
-                newWidth = Math.max(50, resizeStart.width - (e.clientX - dragStart.x));
-            } else if (resizeStart.direction.includes('right')) {
-                newWidth = Math.max(50, resizeStart.width + (e.clientX - dragStart.x));
+            // Adjust size based on direction of resize
+            if (direction.includes('left')) {
+                newWidth = Math.max(50, width - (e.clientX - dragStart.current.x));
+            } else if (direction.includes('right')) {
+                newWidth = Math.max(50, width + (e.clientX - dragStart.current.x));
             }
-            if (resizeStart.direction.includes('top')) {
-                newHeight = Math.max(20, resizeStart.height - (e.clientY - dragStart.y));
-            } else if (resizeStart.direction.includes('bottom')) {
-                newHeight = Math.max(20, resizeStart.height + (e.clientY - dragStart.y));
+            if (direction.includes('top')) {
+                newHeight = Math.max(20, height - (e.clientY - dragStart.current.y));
+            } else if (direction.includes('bottom')) {
+                newHeight = Math.max(20, height + (e.clientY - dragStart.current.y));
             }
 
             updateSize(id, newWidth, newHeight);
@@ -72,10 +69,10 @@ const ImageElement: React.FC<ImageElementProps> = ({
 
     const handleResizeMouseDown = (e: React.MouseEvent, direction: string) => {
         e.stopPropagation();
-        e.preventDefault(); // Отключаем выделение
+        e.preventDefault();
         setIsResizing(true);
-        setDragStart({x: e.clientX, y: e.clientY});
-        setResizeStart({width, height, direction});
+        dragStart.current = { x: e.clientX, y: e.clientY };
+        resizeStart.current = { width: size.width, height: size.height, direction };
     };
 
     useEffect(() => {
@@ -94,15 +91,15 @@ const ImageElement: React.FC<ImageElementProps> = ({
         <div
             className={`image-element ${selected ? 'selected' : ''}`}
             style={{
-                top,
-                left,
-                width,
-                height,
+                top: position.y,
+                left: position.x,
+                width: size.width,
+                height: size.height,
                 position: 'absolute',
                 border: selected ? '1px solid blue' : 'none',
                 cursor: isDragging ? 'move' : 'default',
                 transform: `rotate(${rotation}deg)`,
-                userSelect: 'none', // Отключает выделение текста
+                userSelect: 'none',
             }}
             onMouseDown={handleMouseDown}
         >
@@ -115,7 +112,7 @@ const ImageElement: React.FC<ImageElementProps> = ({
                     display: 'block',
                 }}
             />
-            {selected && (<ResizeHandles onResizeStart={handleResizeMouseDown} />)}
+            {selected && <ResizeHandles onResizeStart={handleResizeMouseDown} />}
         </div>
     );
 };
