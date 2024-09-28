@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import '../App.css';
-import TextElement from "./TextElement.tsx";
-import ImageElement from "./ImageElement.tsx";
-import ShapeElement from "./ShapeElement.tsx";
+import TextElement from "./elements/TextElement.tsx";
+import ImageElement from "./elements/ImageElement.tsx";
+import ShapeElement from "./elements/ShapeElement.tsx";
 import ElementList from "./ElementList.tsx";
 import PropertiesPanel from "./PropertiesPanel.tsx";
 import {ElementProps} from "./types.ts";
@@ -13,33 +13,33 @@ const SlideEditor: React.FC = () => {
 
     const addTextElement = () => {
         setElements([...elements, {
-            id: elements.length + 1,
+            id: Date.now(),
             type: 'text',
             content: 'Новый текст',
             fontSize: 16,
             fontFamily: 'Arial',
             color: '#d21',
-            position: { x: 100, y: 100 }, // Используем position
-            size: { width: 200, height: 50 }, // Используем size
+            position: { x: 100, y: 100 },
+            size: { width: 200, height: 50 },
             rotation: 0,
         }]);
     };
     const addImageElement = (imageUrl: string) => {
         setElements([...elements, {
-            id: elements.length + 1,
+            id: Date.now(),
             type: 'image',
             content: imageUrl,
-            position: { x: 150, y: 150 }, // Используем position
-            size: { width: 100, height: 100 }, // Используем size
+            position: { x: 150, y: 150 },
+            size: { width: 100, height: 100 },
             rotation: 0,
         }]);
     };
     const addShapeElement = (type: 'rectangle' | 'circle' | 'line') => {
         setElements([...elements, {
-            id: elements.length + 1,
+            id: Date.now(),
             type,
-            position: { x: 200, y: 200 }, // Используем position
-            size: { width: 100, height: 100 }, // Используем size
+            position: { x: 200, y: 200 },
+            size: { width: 100, height: 100 },
             color: '#ff0000',
             rotation: 0,
             lineWidth: 2,
@@ -52,9 +52,10 @@ const SlideEditor: React.FC = () => {
         setSelectedElementId(id);
     };
 
+    const slideWidth = 1000;
+    const slideHeight = 1000;
+
     const updateElementPosition = (id: number, x: number, y: number) => {
-        const slideWidth = 1000;
-        const slideHeight = 1000;
 
         setElements(elements.map(el => {
             if (el.id === id) {
@@ -65,11 +66,7 @@ const SlideEditor: React.FC = () => {
             return el;
         }));
     };
-
-
     const updateElementSize = (id: number, width: number, height: number) => {
-        const slideWidth = 1000;
-        const slideHeight = 1000;
 
         setElements(elements.map(el => {
             if (el.id === id) {
@@ -80,18 +77,17 @@ const SlideEditor: React.FC = () => {
             return el;
         }));
     };
-
-    const updateElementFontSize = (id: number, fontSize: number) => {
-        setElements(elements.map(el => el.id === id ? { ...el, fontSize } : el));
+    const updateElementFontSize = (id: number, newFontSize: number) => {
+        setElements(elements.map(el => el.id === id ? { ...el, fontSize: newFontSize } : el));
     };
-    const updateElementFontFamily = (id: number, fontFamily: string) => {
-        setElements(elements.map(el => el.id === id ? { ...el, fontFamily } : el));
+    const updateElementFontFamily = (id: number, newFontFamily: string) => {
+        setElements(elements.map(el => el.id === id ? { ...el, fontFamily: newFontFamily } : el));
     };
-    const updateElementColor = (id: number, color: string) => {
-        setElements(elements.map(el => el.id === id ? { ...el, color } : el));
+    const updateElementColor = (id: number, newColor: string) => {
+        setElements(elements.map(el => el.id === id ? { ...el, color: newColor } : el));
     };
-    const updateElementContent = (id: number, content: string) => {
-        setElements(elements.map(el => el.id === id ? { ...el, content } : el));
+    const updateElementContent = (id: number, newContent: string) => {
+        setElements(elements.map(el => el.id === id ? { ...el, content: newContent } : el));
     };
     const updateRotation = (id: number, newRotation: number) => {
         setElements(elements.map(el => el.id === id ? { ...el, rotation: newRotation } : el));
@@ -102,6 +98,7 @@ const SlideEditor: React.FC = () => {
     const updateBorderRadius = (id: number, newBorderRadius: number) => {
         setElements(elements.map(el => el.id === id ? { ...el, borderRadius: newBorderRadius } : el));
     };
+
 
     //для изменения размера текстового поля(не особо и нужно:D)
     const handleTextChange = (id: number, newText: string) => {
@@ -126,27 +123,28 @@ const SlideEditor: React.FC = () => {
     //         setSelectedElementId(null); // Сбросить выделение, если клик вне элемента
     //     }
     // };
+    const updateFunctions = {
+        updateElementContent,
+        autoResizeTextarea,
+        updateElementPosition,
+        updateElementSize,
+        updateElementFontSize,
+        updateElementFontFamily,
+        updateElementColor,
+        updateRotation,
+        handleTextChange,
+        updateLineWidth,
+        updateBorderRadius
+    };
 
     const renderPropertiesPanel = () => {
         const selectedElement = elements.find(el => el.id === selectedElementId);
-
         return (
             <PropertiesPanel
                 selectedElement={selectedElement!}
-                updateElementContent={updateElementContent}
-                autoResizeTextarea={autoResizeTextarea}
-                updateElementPosition={updateElementPosition}
-                updateElementSize={updateElementSize}
-                updateElementFontSize={updateElementFontSize}
-                updateElementFontFamily={updateElementFontFamily}
-                updateElementColor={updateElementColor}
-                updateRotation={updateRotation}
-                handleTextChange={handleTextChange}
-                updateLineWidth={updateLineWidth}
-                updateBorderRadius={updateBorderRadius}
+                updateFunctions={updateFunctions}
             />
         )
-
     };
 
     return (

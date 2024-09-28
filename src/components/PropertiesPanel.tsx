@@ -3,17 +3,19 @@ import {ElementProps} from "./types.ts";
 
 interface PropertiesPanelProps {
     selectedElement:  ElementProps | null;
-    updateElementPosition: (id: number, top: number, left: number) => void;
-    updateElementSize: (id: number, width: number, height: number) => void;
-    updateElementFontSize: (id: number, fontSize: number) => void;
-    updateElementFontFamily: (id: number, fontFamily: string) => void;
-    updateElementColor: (id: number, color: string) => void;
-    updateRotation: (id: number, rotation: number) => void;
-    handleTextChange: (id: number, text: string) => void;
-    updateLineWidth: (id: number, lineWidth: number) => void;
-    updateBorderRadius: (id: number, borderRadius: number) => void;
-    autoResizeTextarea: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
-    updateElementContent: (id: number, content: string) => void;
+    updateFunctions: {
+        updateElementPosition: (id: number, top: number, left: number) => void;
+        updateElementSize: (id: number, width: number, height: number) => void;
+        updateElementFontSize: (id: number, fontSize: number) => void;
+        updateElementFontFamily: (id: number, fontFamily: string) => void;
+        updateElementColor: (id: number, color: string) => void;
+        updateRotation: (id: number, rotation: number) => void;
+        handleTextChange: (id: number, text: string) => void;
+        updateLineWidth: (id: number, lineWidth: number) => void;
+        updateBorderRadius: (id: number, borderRadius: number) => void;
+        autoResizeTextarea: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+        updateElementContent: (id: number, content: string) => void;
+    };
 }
 
 const availableFonts = [
@@ -29,23 +31,31 @@ const availableFonts = [
 
 const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                                                              selectedElement,
-                                                             updateElementPosition,
-                                                             updateElementSize,
-                                                             updateElementFontSize,
-                                                             updateElementFontFamily,
-                                                             updateElementColor,
-                                                             updateRotation,
-                                                             handleTextChange,
-                                                             updateLineWidth,
-                                                             updateBorderRadius,
-                                                             autoResizeTextarea,
-                                                             updateElementContent}) => {
+                                                             updateFunctions}) => {
+    const {
+        updateElementContent,
+        autoResizeTextarea,
+        updateElementPosition,
+        updateElementSize,
+        updateElementFontSize,
+        updateElementFontFamily,
+        updateElementColor,
+        updateRotation,
+        updateBorderRadius,
+        handleTextChange,
+        updateLineWidth,
+    } = updateFunctions;
+
     if (!selectedElement) return null;
 
     if (selectedElement.type === 'text') {
         return (
             <>
                 <h3>Параметры текстового элемента</h3>
+                <div>
+                    <label>Id: </label>
+                    {selectedElement.id}
+                </div>
                 <div>
                     <label>Положение Y:</label>
                     <input
@@ -128,16 +138,40 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                     />
                 </div>
                 <div style={{marginTop: '10px'}}>
-                    <button onClick={() => {updateRotation(selectedElement.id, 0)}}>0°</button>
-                    <button onClick={() => {updateRotation(selectedElement.id, 45)}}>45°</button>
-                    <button onClick={() => {updateRotation(selectedElement.id, 90)}}>90°</button>
-                    <button onClick={() => {updateRotation(selectedElement.id, 135)}}>135°</button>
+                    <button onClick={() => {
+                        updateRotation(selectedElement.id, 0)
+                    }}>0°
+                    </button>
+                    <button onClick={() => {
+                        updateRotation(selectedElement.id, 45)
+                    }}>45°
+                    </button>
+                    <button onClick={() => {
+                        updateRotation(selectedElement.id, 90)
+                    }}>90°
+                    </button>
+                    <button onClick={() => {
+                        updateRotation(selectedElement.id, 135)
+                    }}>135°
+                    </button>
                 </div>
                 <div style={{marginTop: '10px'}}>
-                    <button onClick={() => {updateRotation(selectedElement.id, 180)}}>180°</button>
-                    <button onClick={() => {updateRotation(selectedElement.id, 225)}}>225°</button>
-                    <button onClick={() => {updateRotation(selectedElement.id, 270)}}>270°</button>
-                    <button onClick={() => {updateRotation(selectedElement.id, 315)}}>315°</button>
+                    <button onClick={() => {
+                        updateRotation(selectedElement.id, 180)
+                    }}>180°
+                    </button>
+                    <button onClick={() => {
+                        updateRotation(selectedElement.id, 225)
+                    }}>225°
+                    </button>
+                    <button onClick={() => {
+                        updateRotation(selectedElement.id, 270)
+                    }}>270°
+                    </button>
+                    <button onClick={() => {
+                        updateRotation(selectedElement.id, 315)
+                    }}>315°
+                    </button>
                 </div>
                 <div>
                     <label>Поворот:</label>
@@ -146,7 +180,9 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
                         min="0" // Минимальный угол поворота
                         max="360" // Максимальный угол поворота
                         value={selectedElement.rotation || 0}
-                        onChange={(e) => {updateRotation(selectedElement.id, Number(e.target.value))}}
+                        onChange={(e) => {
+                            updateRotation(selectedElement.id, Number(e.target.value))
+                        }}
                     />
                     <span>{selectedElement.rotation || 0}°</span>
                 </div>
@@ -155,7 +191,11 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
     } else if (selectedElement.type === 'image') {
         return (
             <>
-                <h3>Параметры изображенческого элемента</h3>
+            <h3>Параметры изображенческого элемента</h3>
+                <div>
+                    <label>Id: </label>
+                    {selectedElement.id}
+                </div>
                 <div>
                     <label>Положение Y:</label>
                     <input
@@ -252,7 +292,11 @@ const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
             <>
                 <h3>Параметры изображенческого элемента</h3>
                 <div>
-                    <label>Положение Y:</label>
+                    <label>Id: </label>
+                    {selectedElement.id}
+                </div>
+                <div>
+                <label>Положение Y:</label>
                     <input
                         type="number"
                         value={selectedElement.position.y}

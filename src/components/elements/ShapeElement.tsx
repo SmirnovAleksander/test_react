@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ResizeHandles from "./ResizeHandles.tsx";
+import ResizeHandles from "../ResizeHandles.tsx";
 
 interface ShapeElementProps {
     id: number;
