@@ -1,5 +1,5 @@
 import React from "react";
-import {ElementProps} from "./types.ts";
+import {ElementProps} from "../store/types.ts";
 
 interface PropertiesPanelProps {
     selectedElement:  ElementProps | null;

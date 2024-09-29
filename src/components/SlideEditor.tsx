@@ -5,7 +5,7 @@ import ImageElement from "./elements/ImageElement.tsx";
 import ShapeElement from "./elements/ShapeElement.tsx";
 import ElementList from "./ElementList.tsx";
 import PropertiesPanel from "./PropertiesPanel.tsx";
-import {ElementProps} from "./types.ts";
+import {ElementProps} from "../store/types.ts";
 
 const SlideEditor: React.FC = () => {
     const [elements, setElements] = useState<ElementProps[]>([]);
@@ -172,7 +172,7 @@ const SlideEditor: React.FC = () => {
                                 <TextElement
                                     key={el.id}
                                     id={el.id}
-                                    text={el.content}
+                                    content={el.content}
                                     fontSize={el.fontSize}
                                     fontFamily={el.fontFamily}
                                     color={el.color}

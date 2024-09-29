@@ -3,7 +3,7 @@ import ResizeHandles from "../ResizeHandles.tsx";
 
 interface TextElementProps {
     id: number;
-    text: string;
+    content: string;
     fontSize: number;
     fontFamily: string;
     color: string;
@@ -19,7 +19,7 @@ interface TextElementProps {
 
 const TextElement: React.FC<TextElementProps> = ({
                                                      id,
-                                                     text,
+                                                     content,
                                                      fontSize,
                                                      fontFamily,
                                                      color,
@@ -40,7 +40,7 @@ const TextElement: React.FC<TextElementProps> = ({
 
     //для textarea
     const [isEditing, setIsEditing] = useState(false);
-    const [editableText, setEditableText] = useState(text); // Локальное состояние для редактируемого текста
+    const [editableText, setEditableText] = useState(content); // Локальное состояние для редактируемого текста
     const inputRef = useRef<HTMLTextAreaElement>(null); // Реф для input
 
     const handleMouseDown = (e: React.MouseEvent) => {
@@ -99,6 +99,7 @@ const TextElement: React.FC<TextElementProps> = ({
         setIsEditing(true);
     };
     const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        console.log(e);
         setEditableText(e.target.value);
         updateElementContent(id, e.target.value);
     };
@@ -175,7 +176,7 @@ const TextElement: React.FC<TextElementProps> = ({
                     }}
                 />
             ) : (
-                <div>{text}</div>
+                <div>{content}</div>
             )}
             {selected && (<ResizeHandles onResizeStart={handleResizeMouseDown} />)}
         </div>
