@@ -4,11 +4,11 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, appState} from "../../store/store.ts";
 import {selectElement, updateElement} from "../../store/actions.ts";
 
-interface Props {
+interface TextElementProps {
     id: number;
 }
 
-const TextElement: React.FC<Props> = ({id}) => {
+const TextElement: React.FC<TextElementProps> = ({id}) => {
     const dispatch : AppDispatch = useDispatch();
     // const selectedElementId = useSelector((state: appState) => state.selectedElementId);
 
@@ -122,7 +122,7 @@ const TextElement: React.FC<Props> = ({id}) => {
 
     const handleResizeMouseDown = (e: React.MouseEvent, direction: string) => {
         e.stopPropagation();
-        e.preventDefault(); // Отключаем выделение
+        e.preventDefault();
         setIsResizing(true);
         setDragStart({ x: e.clientX, y: e.clientY });
         setResizeStart({ width: size.width, height: size.height, direction });

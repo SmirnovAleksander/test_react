@@ -7,6 +7,8 @@ import {ImageElementProps, ShapeElementProps, TextElementProps} from "../store/t
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, appState} from "../store/store.ts";
 import {addElement, deleteElement, selectElement} from "../store/actions.ts";
+import ShapeElement from "./elements/ShapeElement.tsx";
+import ImageElement from "./elements/ImageElement.tsx";
 
 const SlideEditor: React.FC = () => {
     const dispatch: AppDispatch = useDispatch();
@@ -36,6 +38,7 @@ const SlideEditor: React.FC = () => {
             position: { x: 150, y: 150 },
             size: { width: 100, height: 100 },
             rotation: 0,
+            selected: true
         };
         dispatch(addElement(newImageElement));
     };
@@ -49,6 +52,7 @@ const SlideEditor: React.FC = () => {
             rotation: 0,
             lineWidth: 2,
             borderRadius: 0,
+            selected: true
         };
         dispatch(addElement(newShapeElement));
     };
@@ -167,44 +171,24 @@ const SlideEditor: React.FC = () => {
                                     id={el.id}
                                 />
                             );
-                        // case 'image':
-                        //     return (
-                        //         <ImageElement
-                        //             key={el.id}
-                        //             id={el.id}
-                        //             src={el.content}
-                        //             rotation={el.rotation}
-                        //             position={el.position}
-                        //             size={el.size}
-                        //             selected={el.id === selectedElementId}
-                        //             onSelect={selectElement}
-                        //             updatePosition={updateElementPosition}
-                        //             updateSize={updateElementSize}
-                        //         />
-                        //     );
-                        // case 'rectangle':
-                        // case 'circle':
-                        // case 'line':
-                        //     return (
-                        //         <ShapeElement
-                        //             key={el.id}
-                        //             id={el.id}
-                        //             type={el.type}
-                        //             rotation={el.rotation}
-                        //             lineWidth={el.lineWidth!}
-                        //             borderRadius={el.borderRadius}
-                        //             position={el.position}
-                        //             size={el.size}
-                        //             color={el.color!}
-                        //             selected={el.id === selectedElementId}
-                        //             onSelect={selectElement}
-                        //             updatePosition={updateElementPosition}
-                        //             updateSize={updateElementSize}
-                        //         />
-                        //     );
-                        // Добавьте дополнительные case для других типов элементов, если необходимо
+                        case 'image':
+                            return (
+                                <ImageElement
+                                    key={el.id}
+                                    id={el.id}
+                                />
+                            );
+                        case 'rectangle':
+                        case 'circle':
+                        case 'line':
+                            return (
+                                <ShapeElement
+                                    key={el.id}
+                                    id={el.id}
+                                />
+                            );
                         default:
-                            return null; // На случай, если тип элемента не поддерживается
+                            return null;
                     }
                 })}
 

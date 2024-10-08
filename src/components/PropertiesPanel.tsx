@@ -44,13 +44,13 @@ const PropertiesPanel: React.FC = () => {
         dispatch(updateElement(selectedElement!.id, { rotation }));
     };
 
-    // const updateLineWidth = (lineWidth: number) => {
-    //     dispatch(updateElement(selectedElement!.id, { lineWidth }));
-    // };
-    //
-    // const updateBorderRadius = (borderRadius: number) => {
-    //     dispatch(updateElement(selectedElement!.id, { borderRadius }));
-    // };
+    const updateLineWidth = (lineWidth: number) => {
+        dispatch(updateElement(selectedElement!.id, { lineWidth }));
+    };
+
+    const updateBorderRadius = (borderRadius: number) => {
+        dispatch(updateElement(selectedElement!.id, { borderRadius }));
+    };
 
 
 
@@ -212,243 +212,251 @@ const PropertiesPanel: React.FC = () => {
                 </div>
             </>
         );
+    } else if (selectedElement.type === 'image') {
+        return (
+            <>
+                <h3>Параметры изображенческого элемента</h3>
+                <div>
+                    <label>Id: </label>
+                    {selectedElement.id}
+                </div>
+                <div>
+                    <label>Положение Y:</label>
+                    <input
+                        type="number"
+                        value={selectedElement.position.y}
+                        onChange={(e) => {
+                            updatePosition(selectedElement.position.x, Number(e.target.value))
+                        }}
+                    />
+                </div>
+                <div>
+                    <label>Положение X:</label>
+                    <input
+                        type="number"
+                        value={selectedElement.position.x}
+                        onChange={(e) => {
+                            updatePosition(Number(e.target.value), selectedElement.position.y)
+                        }}
+                    />
+                </div>
+                <div>
+                    <label>Ширина:</label>
+                    <input
+                        type="number"
+                        value={selectedElement.size.width}
+                        onChange={(e) => {
+                            updateSize(Number(e.target.value), selectedElement.size.height)
+                        }}
+                    />
+                </div>
+                <div>
+                    <label>Высота:</label>
+                    <input
+                        type="number"
+                        value={selectedElement.size.height}
+                        onChange={(e) => {
+                            updateSize(selectedElement.size.width, Number(e.target.value))
+                        }}
+                    />
+                </div>
+                <div>
+                    <label>URL изображения:</label>
+                    <input
+                        type="text"
+                        value={selectedElement.content}
+                        onChange={(e) => {
+                            updateContent(e.target.value)
+                        }}
+                    />
+                </div>
+                <div style={{marginTop: '10px'}}>
+                    <button onClick={() => {
+                        updateRotation(0)
+                    }}>0°
+                    </button>
+                    <button onClick={() => {
+                        updateRotation(45)
+                    }}>45°
+                    </button>
+                    <button onClick={() => {
+                        updateRotation(90)
+                    }}>90°
+                    </button>
+                    <button onClick={() => {
+                        updateRotation(135)
+                    }}>135°
+                    </button>
+                </div>
+                <div style={{marginTop: '10px'}}>
+                    <button onClick={() => {
+                        updateRotation(180)
+                    }}>180°
+                    </button>
+                    <button onClick={() => {
+                        updateRotation(225)
+                    }}>225°
+                    </button>
+                    <button onClick={() => {
+                        updateRotation(270)
+                    }}>270°
+                    </button>
+                    <button onClick={() => {
+                        updateRotation(315)
+                    }}>315°
+                    </button>
+                </div>
+                <div>
+                    <label>Поворот:</label>
+                    <input
+                        type="range"
+                        min="0" // Минимальный угол поворота
+                        max="360" // Максимальный угол поворота
+                        value={selectedElement.rotation || 0}
+                        onChange={(e) => {
+                            updateRotation(Number(e.target.value))
+                        }}
+                    />
+                    <span>{selectedElement.rotation || 0}°</span>
+                </div>
+            </>
+        );
+    } else {
+        return (
+            <>
+                <h3>Параметры изображенческого элемента</h3>
+                <div>
+                    <label>Id: </label>
+                    {selectedElement.id}
+                </div>
+                <div>
+                    <label>Положение Y:</label>
+                    <input
+                        type="number"
+                        value={selectedElement.position.y}
+                        onChange={(e) => {
+                            updatePosition(selectedElement.position.x, Number(e.target.value))
+                        }}
+                    />
+                </div>
+                <div>
+                    <label>Положение X:</label>
+                    <input
+                        type="number"
+                        value={selectedElement.position.x}
+                        onChange={(e) => {
+                            updatePosition(Number(e.target.value), selectedElement.position.y)
+                        }}
+                    />
+                </div>
+                <div>
+                    <label>Ширина:</label>
+                    <input
+                        type="number"
+                        value={selectedElement.size.width}
+                        onChange={(e) => {
+                            updateSize(Number(e.target.value), selectedElement.size.height)
+                        }}
+                    />
+                </div>
+                <div>
+                    <label>Высота:</label>
+                    <input
+                        type="number"
+                        value={selectedElement.size.height}
+                        onChange={(e) => {
+                            updateSize(selectedElement.size.width, Number(e.target.value))
+                        }}
+                    />
+                </div>
+                <div>
+                    <label>Цвет текста:</label>
+                    <input
+                        type="color"
+                        value={selectedElement.color}
+                        onChange={(e) => {
+                            updateColor(e.target.value)
+                        }}
+                    />
+                </div>
+                <div style={{marginTop: '10px'}}>
+                    <button onClick={() => {
+                        updateRotation(0)
+                    }}>0°
+                    </button>
+                    <button onClick={() => {
+                        updateRotation(45)
+                    }}>45°
+                    </button>
+                    <button onClick={() => {
+                        updateRotation(90)
+                    }}>90°
+                    </button>
+                    <button onClick={() => {
+                        updateRotation(135)
+                    }}>135°
+                    </button>
+                </div>
+                <div style={{marginTop: '10px'}}>
+                    <button onClick={() => {
+                        updateRotation(180)
+                    }}>180°
+                    </button>
+                    <button onClick={() => {
+                        updateRotation(225)
+                    }}>225°
+                    </button>
+                    <button onClick={() => {
+                        updateRotation(270)
+                    }}>270°
+                    </button>
+                    <button onClick={() => {
+                        updateRotation(315)
+                    }}>315°
+                    </button>
+                </div>
+                <div>
+                    <label>Поворот:</label>
+                    <input
+                        type="range"
+                        min="0" // Минимальный угол поворота
+                        max="360" // Максимальный угол поворота
+                        value={selectedElement.rotation || 0}
+                        onChange={(e) => {
+                            updateRotation(Number(e.target.value))
+                        }}
+                    />
+                    <span>{selectedElement.rotation || 0}°</span>
+                </div>
+                {selectedElement.type === 'line' ? <div>
+                    <label>Толщина линии:</label>
+                    <input
+                        type="range"
+                        min="1"
+                        max="10"
+                        value={selectedElement.lineWidth || 2}
+                        onChange={(e) => {
+                            updateLineWidth(Number(e.target.value))
+                        }}
+                    />
+                    <span>{selectedElement.lineWidth || 2}°</span>
+                </div> : <div></div>}
+                {selectedElement.type === 'rectangle' ? <div>
+                    <label>Радиус закругления: </label>
+                    <input
+                        type="range"
+                        min="2"
+                        max="100"
+                        value={selectedElement.borderRadius || 0}
+                        onChange={(e) => {
+                            updateBorderRadius(Number(e.target.value))
+                        }}
+                    />
+                    <span>{selectedElement.borderRadius || 0}°</span>
+                </div> : <div></div>}
+            </>
+        );
     }
-    // else if (selectedElement.type === 'image') {
-    //     return (
-    //         <>
-    //             <h3>Параметры изображенческого элемента</h3>
-    //             <div>
-    //                 <label>Id: </label>
-    //                 {selectedElement.id}
-    //             </div>
-    //             <div>
-    //                 <label>Положение Y:</label>
-    //                 <input
-    //                     type="number"
-    //                     value={selectedElement.position.y}
-    //                     onChange={(e) => {
-    //                         updatePosition(selectedElement.position.x, Number(e.target.value))
-    //                     }}
-    //                 />
-    //             </div>
-    //             <div>
-    //                 <label>Положение X:</label>
-    //                 <input
-    //                     type="number"
-    //                     value={selectedElement.position.x}
-    //                     onChange={(e) => {
-    //                         updatePosition(Number(e.target.value), selectedElement.position.y)
-    //                     }}
-    //                 />
-    //             </div>
-    //             <div>
-    //                 <label>Ширина:</label>
-    //                 <input
-    //                     type="number"
-    //                     value={selectedElement.size.width}
-    //                     onChange={(e) => {
-    //                         updateSize(Number(e.target.value), selectedElement.size.height)
-    //                     }}
-    //                 />
-    //             </div>
-    //             <div>
-    //                 <label>Высота:</label>
-    //                 <input
-    //                     type="number"
-    //                     value={selectedElement.size.height}
-    //                     onChange={(e) => {
-    //                         updateSize(selectedElement.size.width, Number(e.target.value))
-    //                     }}
-    //                 />
-    //             </div>
-    //             <div>
-    //                 <label>URL изображения:</label>
-    //                 <input
-    //                     type="text"
-    //                     value={selectedElement.content}
-    //                     onChange={(e) => {
-    //                         updateElementContent(selectedElement.id, e.target.value)
-    //                     }}
-    //                 />
-    //             </div>
-    //             <div style={{marginTop: '10px'}}>
-    //                 <button onClick={() => {
-    //                     updateElementRotation(selectedElement.id, 0)
-    //                 }}>0°
-    //                 </button>
-    //                 <button onClick={() => {
-    //                     updateElementRotation(selectedElement.id, 45)
-    //                 }}>45°
-    //                 </button>
-    //                 <button onClick={() => {
-    //                     updateElementRotation(selectedElement.id, 90)
-    //                 }}>90°
-    //                 </button>
-    //                 <button onClick={() => {
-    //                     updateElementRotation(selectedElement.id, 135)
-    //                 }}>135°
-    //                 </button>
-    //             </div>
-    //             <div style={{marginTop: '10px'}}>
-    //                 <button onClick={() => {
-    //                     updateElementRotation(selectedElement.id, 180)
-    //                 }}>180°
-    //                 </button>
-    //                 <button onClick={() => {
-    //                     updateElementRotation(selectedElement.id, 225)
-    //                 }}>225°
-    //                 </button>
-    //                 <button onClick={() => {
-    //                     updateElementRotation(selectedElement.id, 270)
-    //                 }}>270°
-    //                 </button>
-    //                 <button onClick={() => {
-    //                     updateElementRotation(selectedElement.id, 315)
-    //                 }}>315°
-    //                 </button>
-    //             </div>
-    //             <div>
-    //                 <label>Поворот:</label>
-    //                 <input
-    //                     type="range"
-    //                     min="0" // Минимальный угол поворота
-    //                     max="360" // Максимальный угол поворота
-    //                     value={selectedElement.rotation || 0}
-    //                     onChange={(e) => {
-    //                         updateElementRotation(selectedElement.id, Number(e.target.value))
-    //                     }}
-    //                 />
-    //                 <span>{selectedElement.rotation || 0}°</span>
-    //             </div>
-    //         </>
-    //     );
-    // } else {
-    //     return (
-    //         <>
-    //             <h3>Параметры изображенческого элемента</h3>
-    //             <div>
-    //                 <label>Id: </label>
-    //                 {selectedElement.id}
-    //             </div>
-    //             <div>
-    //                 <label>Положение Y:</label>
-    //                 <input
-    //                     type="number"
-    //                     value={selectedElement.position.y}
-    //                     onChange={(e) => updateElementPosition(selectedElement.id, Number(e.target.value), selectedElement.position.x)}
-    //                 />
-    //             </div>
-    //             <div>
-    //                 <label>Положение X:</label>
-    //                 <input
-    //                     type="number"
-    //                     value={selectedElement.position.x}
-    //                     onChange={(e) => updateElementPosition(selectedElement.id, selectedElement.position.y, Number(e.target.value))}
-    //                 />
-    //             </div>
-    //             <div>
-    //                 <label>Ширина:</label>
-    //                 <input
-    //                     type="number"
-    //                     value={selectedElement.size.width}
-    //                     onChange={(e) => updateElementSize(selectedElement.id, Number(e.target.value), selectedElement.size.height)}
-    //                 />
-    //             </div>
-    //             <div>
-    //                 <label>Высота:</label>
-    //                 <input
-    //                     type="number"
-    //                     value={selectedElement.size.height}
-    //                     onChange={(e) => updateElementSize(selectedElement.id, selectedElement.size.width, Number(e.target.value))}
-    //                 />
-    //             </div>
-    //             <div>
-    //                 <label>Цвет текста:</label>
-    //                 <input
-    //                     type="color"
-    //                     value={selectedElement.color}
-    //                     onChange={(e) => updateElementColor(selectedElement.id, e.target.value)}
-    //                 />
-    //             </div>
-    //             <div style={{marginTop: '10px'}}>
-    //                 <button onClick={() => {
-    //                     updateElementRotation(selectedElement.id, 0)
-    //                 }}>0°
-    //                 </button>
-    //                 <button onClick={() => {
-    //                     updateElementRotation(selectedElement.id, 45)
-    //                 }}>45°
-    //                 </button>
-    //                 <button onClick={() => {
-    //                     updateElementRotation(selectedElement.id, 90)
-    //                 }}>90°
-    //                 </button>
-    //                 <button onClick={() => {
-    //                     updateElementRotation(selectedElement.id, 135)
-    //                 }}>135°
-    //                 </button>
-    //             </div>
-    //             <div style={{marginTop: '10px'}}>
-    //                 <button onClick={() => {
-    //                     updateElementRotation(selectedElement.id, 180)
-    //                 }}>180°
-    //                 </button>
-    //                 <button onClick={() => {
-    //                     updateElementRotation(selectedElement.id, 225)
-    //                 }}>225°
-    //                 </button>
-    //                 <button onClick={() => {
-    //                     updateElementRotation(selectedElement.id, 270)
-    //                 }}>270°
-    //                 </button>
-    //                 <button onClick={() => {
-    //                     updateElementRotation(selectedElement.id, 315)
-    //                 }}>315°
-    //                 </button>
-    //             </div>
-    //             <div>
-    //                 <label>Поворот:</label>
-    //                 <input
-    //                     type="range"
-    //                     min="0" // Минимальный угол поворота
-    //                     max="360" // Максимальный угол поворота
-    //                     value={selectedElement.rotation || 0}
-    //                     onChange={(e) => {
-    //                         updateElementRotation(selectedElement.id, Number(e.target.value))
-    //                     }}
-    //                 />
-    //                 <span>{selectedElement.rotation || 0}°</span>
-    //             </div>
-    //             {selectedElement.type === 'line' ? <div>
-    //                 <label>Толщина линии:</label>
-    //                 <input
-    //                     type="range"
-    //                     min="1"
-    //                     max="10"
-    //                     value={selectedElement.lineWidth || 2}
-    //                     onChange={(e) => {
-    //                         updateElementLineWidth(selectedElement.id, Number(e.target.value))
-    //                     }}
-    //                 />
-    //                 <span>{selectedElement.lineWidth || 2}°</span>
-    //             </div> : <div></div>}
-    //             {selectedElement.type === 'rectangle' ? <div>
-    //                 <label>Радиус закругления: </label>
-    //                 <input
-    //                     type="range"
-    //                     min="2"
-    //                     max="100"
-    //                     value={selectedElement.borderRadius || 0}
-    //                     onChange={(e) => {
-    //                         updateElementBorderRadius(selectedElement.id, Number(e.target.value))
-    //                     }}
-    //                 />
-    //                 <span>{selectedElement.borderRadius || 0}°</span>
-    //             </div> : <div></div>}
-    //         </>
-    //     );
-    // }
-    return null;
 };
 
 export default PropertiesPanel;
