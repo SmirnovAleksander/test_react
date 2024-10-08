@@ -8,6 +8,7 @@ export interface TextElementProps {
     fontFamily: string; // Шрифт
     color: string; // Цвет текста
     rotation: number;
+    selected: boolean;
 }
 
 export interface ImageElementProps {
