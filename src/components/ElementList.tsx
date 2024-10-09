@@ -1,17 +1,19 @@
 import React from "react";
+import {AppDispatch, appState} from "../store/store.ts";
+import {useDispatch, useSelector} from "react-redux";
+import {deleteElement, selectElement} from "../store/actions.ts";
 
-interface ElementProps {
-    id: number;
-    type: string;
-}
+const ElementList: React.FC = () => {
+    const dispatch: AppDispatch = useDispatch();
+    const elements = useSelector((state: appState) => state.elements);
+    const selectedElementId = useSelector((state: appState) => state.selectedElementId);
+    const handleSelectElement = (id: number) => {
+        dispatch(selectElement(id));
+    };
 
-interface ElementListProps {
-    elements: ElementProps[];
-    selectedElementId: number | null;
-    onSelectElement: (id: number) => void;
-    onDeleteElement: (id: number) => void;
-}
-const ElementList: React.FC<ElementListProps> = ({elements, onSelectElement, selectedElementId, onDeleteElement}) => {
+    const handleDeleteElement = (id: number) => {
+        dispatch(deleteElement(id));
+    };
     return (
         <div>
             <h3>Список элементов</h3>
@@ -19,12 +21,12 @@ const ElementList: React.FC<ElementListProps> = ({elements, onSelectElement, sel
                 {elements.map(el => (
                     <li key={el.id} style={{listStyle: 'none'}}>
                         <span
-                            onClick={() => onSelectElement(el.id)}
+                            onClick={() => handleSelectElement(el.id)}
                             style={{cursor: 'pointer', fontWeight: el.id === selectedElementId ? 'bold' : 'normal'}}
                         >
                             {el.type}
                         </span>
-                        <button onClick={() => onDeleteElement(el.id)}>
+                        <button onClick={() => handleDeleteElement(el.id)}>
                             Удалить
                         </button>
                     </li>

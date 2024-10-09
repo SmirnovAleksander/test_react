@@ -6,14 +6,14 @@ import PropertiesPanel from "./PropertiesPanel.tsx";
 import {ImageElementProps, ShapeElementProps, TextElementProps} from "../store/types.ts";
 import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch, appState} from "../store/store.ts";
-import {addElement, deleteElement, selectElement} from "../store/actions.ts";
+import {addElement} from "../store/actions.ts";
 import ShapeElement from "./elements/ShapeElement.tsx";
 import ImageElement from "./elements/ImageElement.tsx";
 
 const SlideEditor: React.FC = () => {
     const dispatch: AppDispatch = useDispatch();
     const elements = useSelector((state: appState) => state.elements);
-    const selectedElementId = useSelector((state: appState) => state.selectedElementId);
+    // const selectedElementId = useSelector((state: appState) => state.selectedElementId);
 
     const addTextElement = () => {
         const newTextElement : TextElementProps = {
@@ -194,12 +194,7 @@ const SlideEditor: React.FC = () => {
 
             </div>
             <div className="elements-list">
-                <ElementList
-                    elements={elements}
-                    selectedElementId={selectedElementId}
-                    onSelectElement={selectElement}
-                    onDeleteElement={deleteElement}
-                />
+                <ElementList/>
             </div>
         </div>
     );

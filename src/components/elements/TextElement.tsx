@@ -23,8 +23,14 @@ const TextElement: React.FC<TextElementProps> = ({id}) => {
 
     //для textarea
     const [isEditing, setIsEditing] = useState(false);
-    const [editableText, setEditableText] = useState(''); // Локальное состояние для редактируемого текста
-    const inputRef = useRef<HTMLTextAreaElement>(null); // Реф для input
+    const inputRef = useRef<HTMLTextAreaElement>(null);
+    const [editableText, setEditableText] = useState(element?.type === 'text' ? element.content : '');
+
+    useEffect(() => {
+        if (element && element.type === 'text') {
+            setEditableText(element.content);
+        }
+    }, [element]);
 
     const handleDoubleClick = () => {
         setIsEditing(true);
