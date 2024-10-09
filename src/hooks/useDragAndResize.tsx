@@ -1,71 +1,51 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
+import {selectElement, updateElement} from "../store/actions.ts";
+import {useDispatch} from "react-redux";
+import {AppDispatch} from "../store/store.ts";
+import {ElementProps} from "../store/types.ts";
 
-interface UseDragAndResizeProps {
-    id: number;
-    position: {x: number; y: number };
-    size: {width: number; height: number };
-    updatePosition: (id: number, x: number, y: number) => void;
-    updateSize: (id: number, width: number, height: number) => void;
-    onSelect: (id: number) => void;
-}
+const useDragAndResize = (element : ElementProps) => {
+    const dispatch: AppDispatch = useDispatch();
 
-const useDragAndResize = ({
-                              id,
-                              position,
-                              size,
-                              updatePosition,
-                              updateSize,
-                              onSelect
-                          }: UseDragAndResizeProps) => {
     const [isDragging, setIsDragging] = useState(false);
     const [isResizing, setIsResizing] = useState(false);
-    const dragStart = useRef({ x: 0, y: 0 });
-    const resizeStart = useRef({ width: 0, height: 0, direction: '' });
+    const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+    const [resizeStart, setResizeStart] = useState({ width: 0, height: 0, direction: '' });
 
-    const handleMouseDown = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        e.preventDefault();
-        onSelect(id);
-        setIsDragging(true);
-        dragStart.current = { x: e.clientX - position.x, y: e.clientY - position.y };
+    const slideWidth = 1000;
+    const slideHeight = 1000;
+    const updatePosition = (x: number, y: number) => {
+        const newX = Math.max(0, Math.min(x, slideWidth - element.size.width));
+        const newY = Math.max(0, Math.min(y, slideHeight - element.size.height));
+        dispatch(updateElement(element.id, { position: { x: newX, y: newY }}));
+    }
+    const updateSize = (width: number, height: number) => {
+        const newWidth = Math.min(Math.max(50, width), slideWidth - element.position.x);
+        const newHeight = Math.min(Math.max(20, height), slideHeight - element.position.y);
+        dispatch(updateElement(element.id, { size: { width: newWidth, height: newHeight } }));
     };
 
     const handleMouseMove = (e: MouseEvent) => {
         if (isDragging) {
-            updatePosition(id, e.clientX - dragStart.current.x, e.clientY - dragStart.current.y);
+            updatePosition(e.clientX - dragStart.x, e.clientY - dragStart.y);
         }
         if (isResizing) {
-            const { width, height, direction } = resizeStart.current;
-            let newWidth = size.width;
-            let newHeight = size.height;
+            let newWidth = element.size.width;
+            let newHeight = element.size.height;
 
-            // Adjust size based on direction of resize
-            if (direction.includes('left')) {
-                newWidth = Math.max(50, width - (e.clientX - dragStart.current.x));
-            } else if (direction.includes('right')) {
-                newWidth = Math.max(50, width + (e.clientX - dragStart.current.x));
+            // Изменяем размеры в зависимости от направления
+            if (resizeStart.direction.includes('right')) {
+                newWidth = Math.max(50, resizeStart.width + (e.clientX - dragStart.x));
+            } else if (resizeStart.direction.includes('left')) {
+                newWidth = Math.max(50, resizeStart.width - (e.clientX - dragStart.x));
             }
-            if (direction.includes('top')) {
-                newHeight = Math.max(20, height - (e.clientY - dragStart.current.y));
-            } else if (direction.includes('bottom')) {
-                newHeight = Math.max(20, height + (e.clientY - dragStart.current.y));
+            if (resizeStart.direction.includes('bottom')) {
+                newHeight = Math.max(20, resizeStart.height + (e.clientY - dragStart.y));
+            } else if (resizeStart.direction.includes('top')) {
+                newHeight = Math.max(20, resizeStart.height - (e.clientY - dragStart.y));
             }
-
-            updateSize(id, newWidth, newHeight);
+            updateSize(newWidth, newHeight);
         }
-    };
-
-    const handleMouseUp = () => {
-        setIsDragging(false);
-        setIsResizing(false);
-    };
-
-    const handleResizeMouseDown = (e: React.MouseEvent, direction: string) => {
-        e.stopPropagation();
-        e.preventDefault();
-        setIsResizing(true);
-        dragStart.current = { x: e.clientX, y: e.clientY };
-        resizeStart.current = { width: size.width, height: size.height, direction };
     };
 
     useEffect(() => {
@@ -80,10 +60,35 @@ const useDragAndResize = ({
         };
     }, [isDragging, isResizing]);
 
+
+    const handleMouseUp = () => {
+        setIsDragging(false);
+        setIsResizing(false);
+    };
+
+    const handleResizeMouseDown = (e: React.MouseEvent, direction: string) => {
+        e.stopPropagation();
+        e.preventDefault();
+        setIsResizing(true);
+        setDragStart({ x: e.clientX, y: e.clientY });
+        setResizeStart({ width: element.size.width, height: element.size.height, direction });
+    };
+
+    const handleMouseDown = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        e.preventDefault();
+        setIsDragging(true);
+        setDragStart({ x: e.clientX - element.position.x, y: e.clientY - element.position.y });
+        dispatch(selectElement(element.id))
+    };
+
+
     return {
         isDragging,
+        isResizing,
         handleMouseDown,
         handleResizeMouseDown,
+        handleMouseUp,
     };
 };
 

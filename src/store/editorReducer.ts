@@ -18,17 +18,20 @@ const editorReducer = (state = initialState, action: ElementActions): EditorStat
                 elements: [...state.elements, action.payload],
             };
         case 'DELETE_ELEMENT':
+            console.log('Удаленный элемент:', action.payload);
             return {
                 ...state,
                 elements: state.elements.filter(el => el.id !== action.payload),
                 selectedElementId: state.selectedElementId === action.payload ? null : state.selectedElementId,
             };
         case 'SELECT_ELEMENT':
+            console.log('Выбранный элемент:', action.payload);
             return {
                 ...state,
                 selectedElementId: action.payload,
             };
         case 'DESELECT_ELEMENT':
+            console.log('Сброшено выделение');
             return {
                 ...state,
                 selectedElementId: null,

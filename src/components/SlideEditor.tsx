@@ -52,40 +52,6 @@ const SlideEditor: React.FC = () => {
         dispatch(addElement(newShapeElement));
     };
 
-    // const slideWidth = 1000;
-    // const slideHeight = 1000;
-    //
-    // const updateElementPosition = (id: number, x: number, y: number) => {
-    //
-    //     setElements(elements.map(el => {
-    //         if (el.id === id) {
-    //             const newX = Math.max(0, Math.min(x, slideWidth - el.size.width));
-    //             const newY = Math.max(0, Math.min(y, slideHeight - el.size.height));
-    //             return { ...el, position: { x: newX, y: newY } };
-    //         }
-    //         return el;
-    //     }));
-    // };
-    // const updateElementSize = (id: number, width: number, height: number) => {
-    //
-    //     setElements(elements.map(el => {
-    //         if (el.id === id) {
-    //             const newWidth = Math.min(Math.max(50, width), slideWidth - el.position.x); // минимальный размер 50px
-    //             const newHeight = Math.min(Math.max(20, height), slideHeight - el.position.y); // минимальный размер 20px
-    //             return { ...el,  size: { width: newWidth, height: newHeight } };
-    //         }
-    //         return el;
-    //     }));
-    // };
-    // //для изменения размера текстового поля(не особо и нужно:D)
-    // const handleTextChange = (id: number, newText: string) => {
-    //     setElements(elements.map(el => el.id === id ? { ...el, content: newText } : el));
-    // };
-    // const autoResizeTextarea = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    //     event.target.style.height = 'auto'; // Сброс высоты для пересчета
-    //     event.target.style.height = `${event.target.scrollHeight}px`; // Задание новой высоты в зависимости от содержимого
-    // };
-
     const handleEditorClick = (e: React.MouseEvent<HTMLDivElement>) => {
         const clickedOnElement = (e.target as HTMLElement).closest('.element');
         if (!clickedOnElement) {

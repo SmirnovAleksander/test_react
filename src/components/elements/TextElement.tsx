@@ -10,11 +10,10 @@ interface TextElementProps {
 
 const TextElement: React.FC<TextElementProps> = ({id}) => {
     const dispatch : AppDispatch = useDispatch();
+    const selectedElementId = useSelector((state: appState) => state.selectedElementId);
     const element = useSelector((state: appState) =>
         state.elements.find(el => el.id === id && el.type === "text")
     );
-    const selectedElementId = useSelector((state: appState) => state.selectedElementId);  // Получаем ID выделенного элемента
-    const isSelected = selectedElementId === id;  // Проверяем, выбран ли текущий элемент
 
     const [isDragging, setIsDragging] = useState(false);
     const [isResizing, setIsResizing] = useState(false);
@@ -26,11 +25,11 @@ const TextElement: React.FC<TextElementProps> = ({id}) => {
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const [editableText, setEditableText] = useState(element?.type === 'text' ? element.content : '');
 
-    useEffect(() => {
-        if (element && element.type === 'text') {
-            setEditableText(element.content);
-        }
-    }, [element]);
+    // useEffect(() => {
+    //     if (element && element.type === 'text' && element.content !== editableText) {
+    //         setEditableText(element.content);
+    //     }
+    // }, [element]);
 
     const handleDoubleClick = () => {
         setIsEditing(true);
@@ -70,15 +69,25 @@ const TextElement: React.FC<TextElementProps> = ({id}) => {
         };
     }, [isDragging, isResizing]);
 
-    if (!element) return null;
+    if (!element) {
+        console.log("Element is undefined or not found.");
+        return null;
+    }
     if (element.type !== 'text') return null;
     const { content, fontSize, fontFamily, color, rotation, position, size } = element;
+    const isSelected = selectedElementId === id;  // Проверяем, выбран ли текущий элемент
 
+    const slideWidth = 1000;
+    const slideHeight = 1000;
     const updatePosition = (x: number, y: number) => {
-        dispatch(updateElement(element.id, { position: { x, y }}));
+        const newX = Math.max(0, Math.min(x, slideWidth - element.size.width));
+        const newY = Math.max(0, Math.min(y, slideHeight - element.size.height));
+        dispatch(updateElement(element.id, { position: { x: newX, y: newY }}));
     }
     const updateSize = (width: number, height: number) => {
-        dispatch(updateElement(element.id, { size: { width, height } }));
+        const newWidth = Math.min(Math.max(50, width), slideWidth - element.position.x);
+        const newHeight = Math.min(Math.max(20, height), slideHeight - element.position.y);
+        dispatch(updateElement(element.id, { size: { width: newWidth, height: newHeight } }));
     };
     const updateElementContent = (newText: string) => {
         dispatch(updateElement(element.id, { content: newText }));
