@@ -8,7 +8,6 @@ export interface TextElementProps {
     fontFamily: string;
     color: string;
     rotation: number;
-    selected: boolean;
 }
 
 export interface ImageElementProps {
@@ -18,7 +17,6 @@ export interface ImageElementProps {
     position: { x: number; y: number };
     size: { width: number; height: number };
     rotation: number;
-    selected: boolean;
 }
 
 export interface ShapeElementProps {
@@ -30,7 +28,6 @@ export interface ShapeElementProps {
     rotation: number;
     lineWidth?: number;
     borderRadius?: number;
-    selected: boolean;
 }
 
 export type ElementProps = TextElementProps | ImageElementProps | ShapeElementProps;

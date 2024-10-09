@@ -11,11 +11,12 @@ interface Props {
 
 const ShapeElement: React.FC<Props> = ({id}) => {
     const dispatch : AppDispatch = useDispatch();
-    // const selectedElementId = useSelector((state: appState) => state.selectedElementId);
-
     const element = useSelector((state: appState) =>
         state.elements.find(el => el.id === id)
     );
+
+    const selectedElementId = useSelector((state: appState) => state.selectedElementId);  // Получаем ID выделенного элемента
+    const isSelected = selectedElementId === id;  // Проверяем, выбран ли текущий элемент
 
     const [isDragging, setIsDragging] = useState(false);
     const [isResizing, setIsResizing] = useState(false);
@@ -37,7 +38,7 @@ const ShapeElement: React.FC<Props> = ({id}) => {
 
     if (!element) return null;
     if (!['rectangle', 'circle', 'line'].includes(element.type)) return null;
-    const { color, rotation, position, size, selected, lineWidth, borderRadius} = element as ShapeElementProps;
+    const { color, rotation, position, size, lineWidth, borderRadius} = element as ShapeElementProps;
 
     const updatePosition = (x: number, y: number) => {
         dispatch(updateElement(element.id, { position: { x, y }}));
@@ -100,8 +101,8 @@ const ShapeElement: React.FC<Props> = ({id}) => {
                     left: position.x,
                     width: size.width,
                     height: size.height,
-                    backgroundColor: selected ? 'rgba(0, 0, 255, 0.3)' : 'transparent',
-                    border: selected ? `2px solid blue` : 'none',
+                    backgroundColor: isSelected ? 'rgba(0, 0, 255, 0.3)' : 'transparent',
+                    border: isSelected ? `2px solid blue` : 'none',
                     cursor: isDragging ? 'move' : 'default',
                     userSelect: 'none',
                     pointerEvents: 'auto',
@@ -140,7 +141,7 @@ const ShapeElement: React.FC<Props> = ({id}) => {
                         }}
                     />
                 )}
-                {selected && (<ResizeHandles onResizeStart={handleResizeMouseDown}/>)}
+                {isSelected && (<ResizeHandles onResizeStart={handleResizeMouseDown}/>)}
             </div>
         </>
 

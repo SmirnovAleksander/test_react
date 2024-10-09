@@ -12,11 +12,11 @@ interface ImageProps {
 const ImageElement: React.FC<ImageProps> = ({id}) => {
 
     const dispatch : AppDispatch = useDispatch();
-    // const selectedElementId = useSelector((state: appState) => state.selectedElementId);
-
     const element = useSelector((state: appState) =>
         state.elements.find(el => el.id === id && el.type === "image")
     );
+    const selectedElementId = useSelector((state: appState) => state.selectedElementId);  // Получаем ID выделенного элемента
+    const isSelected = selectedElementId === id;  // Проверяем, выбран ли текущий элемент
 
     const [isDragging, setIsDragging] = useState(false);
     const [isResizing, setIsResizing] = useState(false);
@@ -37,7 +37,7 @@ const ImageElement: React.FC<ImageProps> = ({id}) => {
 
     if (!element) return null;
     if (element.type !== 'image') return null;
-    const { rotation, position, size, selected, content} = element as ImageElementProps;
+    const { rotation, position, size, content} = element as ImageElementProps;
 
 
     const updatePosition = (x: number, y: number) => {
@@ -95,14 +95,14 @@ const ImageElement: React.FC<ImageProps> = ({id}) => {
 
     return (
         <div
-            className={`image-element ${selected ? 'selected' : ''}`}
+            className={`image-element ${isSelected ? 'selected' : ''}`}
             style={{
                 top: position.y,
                 left: position.x,
                 width: size.width,
                 height: size.height,
                 position: 'absolute',
-                border: selected ? '1px solid blue' : 'none',
+                border: isSelected ? '1px solid blue' : 'none',
                 cursor: isDragging ? 'move' : 'default',
                 transform: `rotate(${rotation}deg)`,
                 userSelect: 'none',
@@ -118,7 +118,7 @@ const ImageElement: React.FC<ImageProps> = ({id}) => {
                     display: 'block',
                 }}
             />
-            {selected && <ResizeHandles onResizeStart={handleResizeMouseDown} />}
+            {isSelected && <ResizeHandles onResizeStart={handleResizeMouseDown} />}
         </div>
     );
 };

@@ -6,7 +6,7 @@ type EditorState  = {
     selectedElementId: number | null;
 }
 const initialState: EditorState  = {
-    elements: [],
+    elements: [] as ElementProps[],
     selectedElementId: null,
 };
 const editorReducer = (state = initialState, action: ElementActions): EditorState  => {
@@ -27,6 +27,11 @@ const editorReducer = (state = initialState, action: ElementActions): EditorStat
             return {
                 ...state,
                 selectedElementId: action.payload,
+            };
+        case 'DESELECT_ELEMENT':
+            return {
+                ...state,
+                selectedElementId: null,
             };
         case 'UPDATE_ELEMENT':
             return {

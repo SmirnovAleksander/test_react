@@ -10,11 +10,11 @@ interface TextElementProps {
 
 const TextElement: React.FC<TextElementProps> = ({id}) => {
     const dispatch : AppDispatch = useDispatch();
-    // const selectedElementId = useSelector((state: appState) => state.selectedElementId);
-
     const element = useSelector((state: appState) =>
         state.elements.find(el => el.id === id && el.type === "text")
     );
+    const selectedElementId = useSelector((state: appState) => state.selectedElementId);  // Получаем ID выделенного элемента
+    const isSelected = selectedElementId === id;  // Проверяем, выбран ли текущий элемент
 
     const [isDragging, setIsDragging] = useState(false);
     const [isResizing, setIsResizing] = useState(false);
@@ -72,7 +72,7 @@ const TextElement: React.FC<TextElementProps> = ({id}) => {
 
     if (!element) return null;
     if (element.type !== 'text') return null;
-    const { content, fontSize, fontFamily, color, rotation, position, size, selected } = element;
+    const { content, fontSize, fontFamily, color, rotation, position, size } = element;
 
     const updatePosition = (x: number, y: number) => {
         dispatch(updateElement(element.id, { position: { x, y }}));
@@ -94,7 +94,7 @@ const TextElement: React.FC<TextElementProps> = ({id}) => {
             e.preventDefault(); // Отключаем выделение
             setIsDragging(true);
             setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y });
-            dispatch(selectElement(element.id))
+            dispatch(selectElement(id))
         }
      };
 
@@ -136,14 +136,14 @@ const TextElement: React.FC<TextElementProps> = ({id}) => {
 
     return (
         <div
-            className={`text-element ${selected ? 'selected' : ''}`}
+            className={`text-element ${isSelected ? 'selected' : ''}`}
             style={{
                 top: position.y,
                 left: position.x,
                 width: size.width,
                 height: size.height,
                 position: 'absolute',
-                border: selected ? '1px solid blue' : 'none',
+                border: isSelected ? '1px solid blue' : 'none',
                 cursor: isDragging ? 'move' : 'default',
                 userSelect: isEditing ? 'text' : 'none', // Отключает выделение текста
                 color: `${color}`,
@@ -178,7 +178,7 @@ const TextElement: React.FC<TextElementProps> = ({id}) => {
             ) : (
                 <div>{content}</div>
             )}
-            {selected && (<ResizeHandles onResizeStart={handleResizeMouseDown} />)}
+            {isSelected && (<ResizeHandles onResizeStart={handleResizeMouseDown} />)}
         </div>
     );
 };

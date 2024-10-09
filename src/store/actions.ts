@@ -4,6 +4,7 @@ export const ADD_ELEMENT = 'ADD_ELEMENT';
 export const DELETE_ELEMENT = 'DELETE_ELEMENT';
 export const SELECT_ELEMENT = 'SELECT_ELEMENT';
 export const UPDATE_ELEMENT = 'UPDATE_ELEMENT';
+export const DESELECT_ELEMENT = 'DESELECT_ELEMENT';
 
 export interface AddElementAction {
     type: typeof ADD_ELEMENT;
@@ -20,6 +21,10 @@ export interface SelectElementAction {
     payload: number | null; // ID выбранного элемента
 }
 
+interface DeselectElementAction {
+    type: typeof DESELECT_ELEMENT;
+}
+
 export interface UpdateElementAction {
     type: typeof UPDATE_ELEMENT;
     payload: {
@@ -33,7 +38,8 @@ export type ElementActions =
     | AddElementAction
     | DeleteElementAction
     | SelectElementAction
-    | UpdateElementAction;
+    | UpdateElementAction
+    | DeselectElementAction;
 
 export const addElement = (element: TextElementProps | ImageElementProps | ShapeElementProps): AddElementAction => ({
     type: ADD_ELEMENT,
@@ -53,4 +59,8 @@ export const selectElement = (id: number | null): SelectElementAction => ({
 export const updateElement = (id: number, updates: Partial<TextElementProps | ImageElementProps | ShapeElementProps>): UpdateElementAction => ({
     type: UPDATE_ELEMENT,
     payload: { id, updates },
+});
+
+export const deselectElement = (): DeselectElementAction => ({
+    type: DESELECT_ELEMENT,
 });
